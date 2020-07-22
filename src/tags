@@ -1,0 +1,43 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Apply_Application_Patch	Apply_Application_Patch.c	/^int Apply_Application_Patch(float patch_toUpdate )$/;"	f
+Apply_Firmware_Patch	Apply_Firmware_patch.c	/^int Apply_Firmware_Patch(float patch_toUpdate )$/;"	f
+CC	makefile	/^CC= arm-none-linux-gnueabi-gcc -Wall $/;"	m
+CFLAGS	makefile	/^CFLAGS=-Wall  -I ..\/include$/;"	m
+Check_internet_by_hostname	Wait_for_internet.c	/^int Check_internet_by_hostname(char *host)$/;"	f
+Download_Application_Updates	Download_Application_Updates.c	/^int Download_Application_Updates(void)$/;"	f
+Download_Firmware_Updates	Download_Firmware_Updates.c	/^int Download_Firmware_Updates(void)$/;"	f
+Download_config	Download_config.c	/^int Download_config(int Type)\/\/  1 - Firmware type config Download , 2 - Application type config Download$/;"	f
+Download_lock	main.c	/^int Download_lock()$/;"	f
+Download_patch	Download_patch.c	/^int Download_patch(int Type)$/;"	f
+FTP_MODE	Download_config.c	/^int FTP_MODE;$/;"	v
+Parsing_ACK_from_Server	xmlparser.c	/^int Parsing_ACK_from_Server() $/;"	f
+Send_Update_singal_to_app	Send_Update_singal_to_app.c	/^void Send_Update_singal_to_app()$/;"	f
+Update_buff	update_script.c	/^char *Update_buff="#!\/bin\/bash\\nExtracted_path=\/mnt\/sysuser\/Firmware-Upgrade\/Extract\/\\nupdate_path=\/mnt\/sysuser\/Firmware-Upgrade\/Extract\/patch\\nBootfile_Images_Path=$update_path\/boot_files\\nclear_uboot_files()\\n{\\nrm -rf $Bootfile_Images_Path\/u-boot.bin\\nrm -rf $Bootfile_Images_Path\/uboot.md5\\n}\\nclear_kernel_files()\\n{\\nrm -rf $Bootfile_Images_Path\/kernel.IMG\\nrm -rf $Bootfile_Images_Path\/kernel.md5\\n}\\nkernel_loading()\\n{\\ncd $Bootfile_Images_Path\/\\nmd5sum -c kernel.md5\\nretval=$?\\nif [ $retval -ne 0 ] \\nthen\\necho \\"Error:1 Kernel File Corrupted\\"\\necho \\"\\"\\ncd\\nclear_kernel_files\\nreturn 1\\nfi\\nif [ -f $Bootfile_Images_Path\/kernel.IMG ]\\nthen\\n\\necho \\"Loading  GL11 iMX6  Kenel Image\\" \\ndd if=$Bootfile_Images_Path\/kernel.IMG of=\/dev\/mmcblk0 bs=1M seek=1 conv=fsync\\necho \\"Kernel Loaded Successfully\\"\\nreturn 0\\nelse\\necho \\"Error 2:Kernel File Not Found\\"\\necho \\"\\"\\nreturn 2\\nfi\\n}\\nuboot_loading()\\n{\\ncd $Bootfile_Images_Path\\nmd5sum -c uboot.md5\\nretval=$?\\nif [ $retval -ne 0 ]\\nthen\\necho \\"Error:1 Uboot File Corrupted\\"\\necho \\"\\"\\ncd\\nclear_uboot_files\\nreturn  1\\nfi\\nif [ -f $Bootfile_Images_Path\/u-boot.bin  ]\\nthen\\necho \\"Loading GL11 iMX6 U-Boot Image\\"\\necho 8 > \/sys\/devices\/platform\/sdhci-esdhc-imx.1\/mmc_host\/mmc1\/mmc1:0001\/boot_config\\ndd if=\/dev\/zero of=\/dev\/mmcblk0 bs=512 seek=1536 count=8\\necho 0 > \/sys\/block\/mmcblk0boot0\/force_ro\\ndd if=$Bootfile_Images_Path\/u-boot.bin of=\/dev\/mmcblk0boot0 bs=512 seek=2 skip=2\\necho 1 > \/sys\/block\/mmcblk0boot0\/force_ro\\necho 8 > \/sys\/devices\/platform\/sdhci-esdhc-imx.1\/mmc_host\/mmc1\/mmc1:0001\/boot_config\\necho \\"U-Boot Loaded Successfully\\"\\nreturn 0\\nelse\\necho \\"Error :2UBoot File Not Found\\"\\necho \\"\\"\\nreturn  2\\nfi\\n}\\n\\nupdate_etc_visiontek_release()\\n{\\nUpdated_Version=$(cat \/root\/.Firmware_version)\\nDate=$(date +%d%m%Y-%H:%M)\\nmd5sum=$(cut \/mnt\/sysuser\/Firmware-Upgrade\/Extract\/patch.md5 -d ' ' -f1)\\necho \\"PATCH_VERSION=$Updated_Version\\nPATCH_DATE=$Date\\nPATCH_MD5SUM=$md5sum\\" > \/etc\/visiontek_release\\necho \\"$Updated_Version Firmware Patch updated successfully...\\"\\n}\\nif [ ! -d $update_path ]\\nthen\\necho \\"$update_path Directory not found\\" \\nexit 1\\nfi\\nchmod 777 -R  $update_path\/ \\nif [ -e $Bootfile_Images_Path\/u-boot.bin ]  && [ -e $Bootfile_Images_Path\/uboot.md5 ]\\nthen\\necho \\"---------------UBoot Files Found ------------------\\"\\nuboot_loading\\nret=$?\\nif [ $ret -eq 0 ]\\nthen\\nclear_uboot_files\\nfi\\nsleep 3\\nsync\\nelse\\necho \\"---------------UBoot Files Not found-----------\\"\\nfi\\nif [ -e $Bootfile_Images_Path\/kernel.IMG ]  &&  [  -e $Bootfile_Images_Path\/kernel.md5 ]\\nthen\\necho \\"--------------Kernel Files Found------------------\\"       \\nsleep 3\\nkernel_loading\\nret=$?\\nif [ $ret -eq 0 ]\\nthen\\nclear_kernel_files\\nfi\\nsleep 3\\nsync\\nelse\\necho \\"------------------Kernel Files Not found----------\\"       \\nfi\\nif [ -e $update_path\/tmp\/start_fw.sh ]\\nthen\\necho \\"Running Pre Management Work For patch \\"\\nsh $update_path\/tmp\/start_fw.sh \\nsleep 1\\nfi\\n\\n`yes | cp -r $update_path\/*   \/`\\n\\nupdate_etc_visiontek_release \\n\\nif [ -e $update_path\/tmp\/end_fw.sh ]\\nthen\\necho \\"Post Managemnt Work For Patch \\"\\nsh $update_path\/tmp\/end_fw.sh \\nfi\\nrm -rf $Extracted_path\\nexit 0\\n#VISIONTEK#\\n";$/;"	v
+Update_script	update_script.c	/^int Update_script()$/;"	f
+Wait_for_internet	Wait_for_internet.c	/^void Wait_for_internet(void)$/;"	f
+bin_strip	makefile	/^bin_strip=arm-none-linux-gnueabi-strip$/;"	m
+get_Machineid	bkp_get_RHMS_response.c	/^int get_Machineid(char *machineid)$/;"	f
+get_Machineid	get_RHMS_response.c	/^int get_Machineid(char *machineid)$/;"	f
+get_POS_Application_version	get_POS_Application_version.c	/^void get_POS_Application_version()$/;"	f
+get_POS_Firmware_version	get_POS_Firmware_version.c	/^void get_POS_Firmware_version()$/;"	f
+get_RHMS_Server_details	get_config_details.c	/^int get_RHMS_Server_details(void)$/;"	f
+get_RHMS_response	get_RHMS_response.c	/^int get_RHMS_response()$/;"	f
+get_device_serialnumber	bkp_get_RHMS_response.c	/^int get_device_serialnumber(char *serialnum)  \/\/ Updating Device serial number in RHMS health structures$/;"	f
+get_device_serialnumber	get_RHMS_response.c	/^int get_device_serialnumber(char *serialnum)  \/\/ Updating Device serial number in RHMS health structures$/;"	f
+get_macid	bkp_get_RHMS_response.c	/^int get_macid(char *macid)$/;"	f
+get_macid	get_RHMS_response.c	/^int get_macid(char *macid)$/;"	f
+get_updates_info	get_updates_info.c	/^int get_updates_info(int Type)$/;"	f
+libs	makefile	/^libs=-L ..\/lib -lxml2 -lz$/;"	m
+main	bkp_get_RHMS_response.c	/^int main(int argc, char *argv[])$/;"	f
+main	main.c	/^int main()$/;"	f
+parseDoc	xmlparser.c	/^static int parseDoc(char *docname) {$/;"	f	file:
+parseStory	xmlparser.c	/^int parseStory (xmlDocPtr doc, xmlNodePtr cur) $/;"	f
+retrieve_nw_details	Wait_for_internet.c	/^static int retrieve_nw_details(void)$/;"	f	file:
+wait_for_data	bkp_get_RHMS_response.c	/^int wait_for_data(int sockfd,int timeout)$/;"	f
+wait_for_data	get_RHMS_response.c	/^int wait_for_data(int sockfd,int timeout)$/;"	f
+wget_download	wget.c	/^int wget_download (char *url,char *filename) \/\/ Mode= Active or Passive, retry_count =retry count to wget$/;"	f
