@@ -298,5 +298,6 @@ int Download_applications(int Update_count,struct RHMS DownloadApplication[Updat
 	for(i=0;i<Update_count;i++)
 		fprintf(stdout,"DownloadApplication[%d].Type = %s,DownloadApplication[%d].Name = %s,DownloadApplication[%d].URL = %s,DownloadApplication[%d].Version = %f\n",i,DownloadApplication[i].Type,i,DownloadApplication[i].Name,i,DownloadApplication[i].URL,i,DownloadApplication[i].Version);
 
+
 	return 0;
 }
