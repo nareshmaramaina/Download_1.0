@@ -2,7 +2,7 @@
 #include<string.h>
 #include<stdlib.h>
 int App_updates();
-struct RHMS
+struct RHMSApplication
 {
 	char Type[128];
 	char Name[128];
@@ -10,7 +10,7 @@ struct RHMS
 	float Version;
 };
 
-struct POS 
+struct POSApplication 
 {
 	char Type[128];
 	char Name[128];
@@ -30,18 +30,19 @@ int main()
 
 int App_updates(int Total_Current_Device_Apps, int Total_Current_Server_Apps)
 {
-	struct RHMS ServerApplication[Total_Current_Device_Apps];
-	struct RHMS DownloadApplication[Total_Current_Device_Apps];
-	struct POS DeviceApplication[Total_Current_Server_Apps];;
+	struct RHMSApplication ServerApplication[Total_Current_Server_Apps];
+	struct RHMSApplication DownloadApplication[Total_Current_Server_Apps];
+	struct POSApplication DeviceApplication[Total_Current_Device_Apps];;
 	FILE *fp = NULL;
 	char *line=NULL,*str=NULL;
 	int Update_count,Update_flag;
 	size_t len=20;
 	int i,j,check=0,  Total_Device_Apps=0,  Total_Server_Apps=0;
-	fprintf(stdout,"ServerApplication size = %ld Devcie Application size = %ld\n",sizeof(struct POS),sizeof(struct RHMS));
+	fprintf(stdout,"ServerApplication size = %ld Devcie Application size = %ld\n",sizeof(struct POSApplication),sizeof(struct RHMSApplication));
 	fprintf(stdout,"ServerApplication size = %ld Devcie Application size = %ld\n",sizeof(ServerApplication),sizeof(DeviceApplication));
 	memset(ServerApplication,0,sizeof(ServerApplication));
 	memset(DeviceApplication,0,sizeof(DeviceApplication));
+	memset(DownloadApplication,0,sizeof(DownloadApplication));
 	fp = fopen("/etc/Application_release","r");
 	if(fp == NULL)
 	{
@@ -211,8 +212,8 @@ int App_updates(int Total_Current_Device_Apps, int Total_Current_Server_Apps)
 		{
 			if ( strlen(ServerApplication[i].URL) < 12 )
 			{
-			fprintf(stdout,"URL Not found,  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
-			continue;
+				fprintf(stdout,"URL Not found,  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
+				continue;
 			}
 			if ( j == Total_Device_Apps )
 				fprintf(stdout,"Update Found,Newly Adding  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
@@ -228,11 +229,11 @@ int App_updates(int Total_Current_Device_Apps, int Total_Current_Server_Apps)
 
 	return 0;
 }
-int Get_Server_And_Device_Applications_Count(int *Total_Server_apps,int *Total_Device_apps)
+int Get_Server_And_Device_Applications_Count(int *Total_Device_apps,int *Total_Server_apps)
 {
 	FILE *fp = NULL;
 
-	char *line=NULL,*str=NULL;
+	char *line=NULL;
 	int i,j;
 	size_t len;
 	fp = fopen("/etc/Application_release","r");
@@ -245,9 +246,9 @@ int Get_Server_And_Device_Applications_Count(int *Total_Server_apps,int *Total_D
 	{
 		for(i=0,j=0;getline(&line, &len, fp) > 0;)
 		{
-			if((str = (char *)strstr(line,"ApplicationType:")) != NULL)
+			if(	strstr(line,"ApplicationType:") != NULL)
 				i++;	
-			else if((str = (char *)strstr(line,"ApplicationName:")) != NULL)
+			else if(	strstr(line,"ApplicationName:")  != NULL)
 				j++;
 
 		}
@@ -272,9 +273,9 @@ int Get_Server_And_Device_Applications_Count(int *Total_Server_apps,int *Total_D
 	{
 		for(i=0,j=0;getline(&line, &len, fp) > 0;)
 		{
-			if((str = (char *)strstr(line,"ApplicationType:")) != NULL)
+			if(	strstr(line,"ApplicationType:") != NULL)
 				i++;
-			else if((str = (char *)strstr(line,"ApplicationName:")) != NULL)
+			else if(	strstr(line,"ApplicationName:") != NULL)
 				j++;
 
 		}
@@ -291,7 +292,7 @@ int Get_Server_And_Device_Applications_Count(int *Total_Server_apps,int *Total_D
 	}
 	return 0;
 }
-int Download_applications(int Update_count,struct RHMS DownloadApplication[Update_count])
+int Download_applications(int Update_count,struct RHMSApplication DownloadApplication[Update_count])
 {
 	fprintf(stdout,"Update_count %d \n",Update_count);
 	int i;

@@ -1,118 +1,93 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
-int App_updates();
-struct RHMS
+int Firmware_updates();
+struct RHMSFirmware
 {
-	char Type[128];
-	char Name[128];
 	char URL[512];
-	float Version;
-};
-
-struct POS 
-{
-	char Type[128];
-	char Name[128];
 	float Version;
 };
 
 int main()
 {
-	int Total_Current_Device_Apps=0, Total_Current_Server_Apps=0,ret;
-	ret = Get_Server_And_Device_Applications_Count(&Total_Current_Device_Apps, &Total_Current_Server_Apps);
-	fprintf(stdout,"Total_Current_Device_Apps = %d, Total_Current_Server_Apps = %d\n",Total_Current_Device_Apps, Total_Current_Server_Apps);
-	if ( ret != 0)
+	int Total_Current_Server_Apps=0;
+	Total_Current_Server_Apps = Get_Server_Firmwares_Count();
+	fprintf(stdout,"Total_Current_Server_Apps = %d\n",Total_Current_Server_Apps);
+	if ( Total_Current_Server_Apps < 0)
 		return -1;
-	App_updates(Total_Current_Device_Apps,Total_Current_Server_Apps);	
+	Firmware_updates(Total_Current_Server_Apps);	
 	return 0;
 }
 
-int App_updates(int Total_Current_Device_Apps, int Total_Current_Server_Apps)
+int Firmware_updates( int Total_Current_Server_Apps)
 {
-	struct RHMS ServerApplication[Total_Current_Device_Apps];
-	struct RHMS DownloadApplication[Total_Current_Device_Apps];
-	struct POS DeviceApplication[Total_Current_Server_Apps];;
+	float DeviceFirmwareVersion=0.0;
+	char ServerFirmwareName[128]="";
+	char DeviceFirmwareName[128]="";
+	struct RHMSFirmware ServerFirmware[Total_Current_Server_Apps];
+	struct RHMSFirmware DownloadFirmware[Total_Current_Server_Apps];
+//	struct POSFirmware DeviceFirmware[Total_Current_Server_Apps];
 	FILE *fp = NULL;
 	char *line=NULL,*str=NULL;
-	int Update_count,Update_flag;
-	size_t len=20;
-	int i,j,check=0,  Total_Device_Apps=0,  Total_Server_Apps=0;
-	fprintf(stdout,"ServerApplication size = %ld Devcie Application size = %ld\n",sizeof(struct POS),sizeof(struct RHMS));
-	fprintf(stdout,"ServerApplication size = %ld Devcie Application size = %ld\n",sizeof(ServerApplication),sizeof(DeviceApplication));
-	memset(ServerApplication,0,sizeof(ServerApplication));
-	memset(DeviceApplication,0,sizeof(DeviceApplication));
-	fp = fopen("/etc/Application_release","r");
+	int Update_count,F_check=0;
+	size_t len=0;
+	int i,check=0, ret ,  Total_Server_Apps=0;
+	fprintf(stdout,"RHMS Firmware size = %ld\n",sizeof(struct RHMSFirmware));
+	memset(ServerFirmware,0,sizeof(ServerFirmware));
+	memset(DownloadFirmware,0,sizeof(DownloadFirmware));
+	fp = fopen("/etc/Firmware_release","r");
 	if(fp == NULL)
 	{
-		fprintf(stdout," /etc/Application_release  file not found \n");
+		fprintf(stdout," /etc/Firmware_release  file not found \n");
 		return -1;
 	}
 
-	for(i=0,j=0,check=0;getline(&line, &len, fp) > 0;)
+	for(i=0,F_check=0,check=0;getline(&line, &len, fp) > 0;)
 	{
-		if((str = (char *)strstr(line,"ApplicationType:")) != NULL)
+		if((str = (char *)strstr(line,"FirmwareName:")) != NULL)
 		{
-			if( check == 0 || check == 2 || check == 4 )
+			if ( F_check == 0 )
 			{
-
-				strcpy(ServerApplication[i].Type,str+16);
-				if(ServerApplication[i].Type[ strlen(ServerApplication[i].Type) -1 ] == '\n')
-					ServerApplication[i].Type[ strlen(ServerApplication[i].Type) - 1 ]='\0';
-				i++;
-				check=1;
+				strcpy(ServerFirmwareName,str+13);
+				if(ServerFirmwareName[strlen(ServerFirmwareName)-1] == '\n')
+					ServerFirmwareName[strlen(ServerFirmwareName)-1]='\0';
+				F_check = 1;
 			}
 			else 
 			{
-				fprintf(stdout,"ApplicationType Error: Wrong Application Response in /etc/Application_release\n");
-				return -1;
-			}
-		}
-		else if((str = (char *)strstr(line,"ApplicationName:")) != NULL)
-		{
-			if ( check == 1 )
-			{
-				strcpy(ServerApplication[j].Name,str+16);
-				if(ServerApplication[j].Name[strlen(ServerApplication[j].Name)-1] == '\n')
-					ServerApplication[j].Name[strlen(ServerApplication[j].Name)-1]='\0';
-				j++;
-				check = 2;
-			}
-			else 
-			{
-				fprintf(stdout,"ApplicationName Error: Wrong Application Response in /etc/Application_release\n");
+				fprintf(stdout,"FirmwareName check Error: Wrong Firmware Response in /etc/Firmware_release\n");
 				return -1;
 			}
 
 		}
 		else if((str = (char *)strstr(line,"Version:")) != NULL)
 		{
-			if( check == 2  && i == j )
+			if( F_check == 1 && (i==0 || check == 2) )
 			{
-				ServerApplication[j-1].Version  = atof(str+8);
-				check=3;
+
+				ServerFirmware[i].Version  = atof(str+8);
+				check=1;
 			}
 			else 
 			{	
-				fprintf(stdout," %d  %d \n", i,j);
-				fprintf(stdout,"Version Error: Wrong Application Response in /etc/Application_release\n");
+				fprintf(stdout,"Version check Error: Wrong Firmware Response in /etc/Firmware_release\n");
 				return 0;
 			}
 		}
 
-		else if((str = (char *)strstr(line,"ApplicationURL:")) != NULL)
+		else if((str = (char *)strstr(line,"FirmwareURL:")) != NULL)
 		{
-			if( check == 3  && i == j )
+			if( check == 1  )
 			{
-				strcpy(ServerApplication[j-1].URL,str+15);
-				if(ServerApplication[j-1].URL[strlen(ServerApplication[j-1].URL)-1] == '\n')
-					ServerApplication[j-1].URL[strlen(ServerApplication[j-1].URL)-1]='\0';
-				check=4;
+				strcpy(ServerFirmware[i].URL,str+12);
+				if(ServerFirmware[i].URL[strlen(ServerFirmware[i].URL)-1] == '\n')
+					ServerFirmware[i].URL[strlen(ServerFirmware[i].URL)-1]='\0';
+				check =2;
+				i++;
 			}
 			else
 			{
-				fprintf(stdout," %d  %d \n", i,j);
-				fprintf(stdout,"ApplicationURL Error: Wrong Application Response in /etc/Application_release\n");
+				fprintf(stdout,"FirmwareURL check Error: Wrong Firmware Response in /etc/Firmware_release\n");
 				return 0;
 			}
 		}
@@ -128,47 +103,36 @@ int App_updates(int Total_Current_Device_Apps, int Total_Current_Server_Apps)
 	line=NULL;
 	fclose(fp);
 
-	if ( check == 3 )
-	{
-		fprintf(stdout,"ApplicationURL Error: Wrong Application Response in /etc/Application_release\n");
-		return -1;
-	}
-	for(i=0;i<j;i++)
-		fprintf(stdout,"ApplicationType =%s ,ApplicationName=%s,ApplicationVersion= %.1f ApplicationURL = %s\n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version,ServerApplication[i].URL);
+	for(i=0;i<Total_Server_Apps;i++)
+		fprintf(stdout,"FirmwareName=%s,FirmwareVersion= %.1f FirmwareURL = %s\n",ServerFirmwareName,ServerFirmware[i].Version,ServerFirmware[i].URL);
 
 
-	fp = fopen("/etc/visiontek_Application_release","r");
+	fp = fopen("/etc/visiontek_Firmware_release","r");
 	if(fp == NULL)
 	{
-		fprintf(stdout," /etc/visiontek_Application_release  file not found \n");
+		fprintf(stdout," /etc/visiontek_Firmware_release  file not found \n");
 	}
 	else 
 	{
-		for(i=0,j=0;getline(&line, &len, fp) > 0;)
+		for(i=0,F_check=0;getline(&line, &len, fp) > 0;)
 		{
-			if((str = (char *)strstr(line,"ApplicationType:")) != NULL)
+			if((str = (char *)strstr(line,"FirmwareName:")) != NULL)
 			{
-				strcpy(DeviceApplication[i].Type,str+16);
-				if(DeviceApplication[i].Type[ strlen(DeviceApplication[i].Type) -1 ] == '\n')
-					DeviceApplication[i].Type[ strlen(DeviceApplication[i].Type) - 1 ]='\0';
-				i++;
-			}
-			else if((str = (char *)strstr(line,"ApplicationName:")) != NULL)
-			{
-				strcpy(DeviceApplication[j].Name,str+16);
-				if(DeviceApplication[j].Name[strlen(DeviceApplication[j].Name)-1] == '\n')
-					DeviceApplication[j].Name[strlen(DeviceApplication[j].Name)-1]='\0';
-				j++;
+				strcpy(DeviceFirmwareName,str+13);
+				if(DeviceFirmwareName[strlen(DeviceFirmwareName)-1] == '\n')
+					DeviceFirmwareName[strlen(DeviceFirmwareName)-1]='\0';
+				F_check=1;
 			}
 			else if((str = (char *)strstr(line,"Version:")) != NULL)
 			{
-				if( i > 0 && i == j )
-					DeviceApplication[j-1].Version  = atof(str+8);
-
+				if ( F_check == 1 )
+				{
+					DeviceFirmwareVersion  = atof(str+8);
+					break;
+				}
 				else 
 				{	
-					fprintf(stdout," %d  %d \n", i,j);
-					fprintf(stdout,"Wrong Application Response in /etc/visiontek_Application_release\n");
+					fprintf(stdout,"FirmwareName Error : Wrong Firmware Response in /etc/visiontek_Firmware_release\n");
 					return 0;
 				}
 			}
@@ -178,126 +142,78 @@ int App_updates(int Total_Current_Device_Apps, int Total_Current_Server_Apps)
 
 
 		}
-		Total_Device_Apps = i;
-		fprintf(stdout," Total_Device_Apps = %d\n", Total_Device_Apps);
-		fprintf(stdout," %d  %d \n", i,j);
 		free(line);
 		line=NULL;
 		fclose(fp);
 	}
-	for(i=0,Update_count=0;i<Total_Server_Apps;i++)
+	ret = strcmp(ServerFirmwareName,DeviceFirmwareName);
+	if ( ret != 0) 
 	{
 
-		for ( Update_flag=0,j=0; j < Total_Device_Apps ; j++ )
-		{
-			if (  strcmp(ServerApplication[i].Type,DeviceApplication[j].Type) == 0 && strcmp(ServerApplication[i].Name,DeviceApplication[j].Name) ==  0  )
-			{
-
-				if( ServerApplication[i].Version > DeviceApplication[j].Version )
-				{
-					fprintf(stdout,"Update Found,ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f,DeviceApplicationVersion = %f\n",DeviceApplication[j].Type,DeviceApplication[j].Name,ServerApplication[i].Version , DeviceApplication[j].Version);
-
-					Update_flag=1;		
-				}
-
-				else 
-					fprintf(stdout,"No Update Found, ApplicationType = %s, ApplicationName = %s, DeviceApplicationVersion = %f\n",DeviceApplication[j].Type,DeviceApplication[j].Name, DeviceApplication[j].Version);
-				break;
-
-			}
-		}
-
-		if ( j == Total_Device_Apps || Update_flag == 1)
-		{
-			if ( strlen(ServerApplication[i].URL) < 12 )
-			{
-			fprintf(stdout,"URL Not found,  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
-			continue;
-			}
-			if ( j == Total_Device_Apps )
-				fprintf(stdout,"Update Found,Newly Adding  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
-			strcpy(DownloadApplication[Update_count].Type,ServerApplication[i].Type);
-			strcpy(DownloadApplication[Update_count].Name,ServerApplication[i].Name);
-			strcpy(DownloadApplication[Update_count].URL,ServerApplication[i].URL);
-			DownloadApplication[Update_count].Version=ServerApplication[i].Version;
-			Update_count++;
-		}
+		fprintf(stdout,"Firmware Name Got Changed\n");
+		system("cat /etc/visiontek_Firmware_release >> /etc/.visiontek_Firmware_release_Changed");
+		remove("/etc/visiontek_Firmware_release");	
 	}
 
-	Download_applications(Update_count,DownloadApplication);
+	if( ServerFirmware[0].Version > DeviceFirmwareVersion )
+	{
+
+		for (Update_count=0, i=0; i < Total_Server_Apps ; i++ )
+		{
+
+			if( ServerFirmware[i].Version > DeviceFirmwareVersion )
+			{
+				if ( strlen(ServerFirmware[i].URL) < 12 )
+				{
+					fprintf(stdout,"URL Not found,  FirmwareName = %s ServerFirmwareVersion = %f \n",ServerFirmwareName,ServerFirmware[i].Version );
+					continue;
+				}
+				strcpy(DownloadFirmware[Update_count].URL,ServerFirmware[i].URL);
+				DownloadFirmware[Update_count].Version=ServerFirmware[i].Version;
+				fprintf(stdout,"Update Found,FirmwareName = %s ServerFirmwareVersion = %f,DeviceFirmwareVersion = %f\n",DeviceFirmwareName,ServerFirmware[i].Version , DeviceFirmwareVersion);
+
+				Update_count++;
+			}
+
+		}
+		Download_firmwares(Update_count,DownloadFirmware);
+	}
+
+	else 
+		fprintf(stdout,"No Update Found,  FirmwareName = %s, Current DeviceFirmwareVersion = %f\n",DeviceFirmwareName, DeviceFirmwareVersion);
+
 
 	return 0;
 }
-int Get_Server_And_Device_Applications_Count(int *Total_Server_apps,int *Total_Device_apps)
+int Get_Server_Firmwares_Count()
 {
 	FILE *fp = NULL;
 
-	char *line=NULL,*str=NULL;
-	int i,j;
+	char *line=NULL;
+	int i;
 	size_t len;
-	fp = fopen("/etc/Application_release","r");
+	fp = fopen("/etc/Firmware_release","r");
 	if(fp == NULL)
 	{
-		fprintf(stdout," /etc/Application_release  file not found \n");
+		fprintf(stdout," /etc/Firmware_release  file not found \n");
 		return -1;
 	}
 	else 
 	{
-		for(i=0,j=0;getline(&line, &len, fp) > 0;)
-		{
-			if((str = (char *)strstr(line,"ApplicationType:")) != NULL)
-				i++;	
-			else if((str = (char *)strstr(line,"ApplicationName:")) != NULL)
-				j++;
-
-		}
-		if( i == j )
-			*Total_Server_apps=i;
-		else 
-		{
-			fprintf(stdout,"Wrong Response in /etc/Application_release, We Can't Continue \n"); 
-			return -1;
-		}	
-		fclose(fp);
-
-	}
-	fp = fopen("/etc/visiontek_Application_release","r");
-	if(fp == NULL)
-	{
-		fprintf(stdout," /etc/visiontek_Application_release  file not found \n");
-		*Total_Device_apps=0;
-	}
-
-	else 
-	{
-		for(i=0,j=0;getline(&line, &len, fp) > 0;)
-		{
-			if((str = (char *)strstr(line,"ApplicationType:")) != NULL)
+		for(i=0;getline(&line, &len, fp) > 0;)
+			if(	strstr(line,"Version:") != NULL)
 				i++;
-			else if((str = (char *)strstr(line,"ApplicationName:")) != NULL)
-				j++;
-
-		}
-		if( i == j )
-			*Total_Device_apps=i;
-		else
-		{
-			fprintf(stdout,"Wrong Response in /etc/visiontek_Application_release, moving /etc/visiontek_Application_release to bkp apply All application patches \n");
-			system("mv /etc/visiontek_Application_release /etc/.__Rejected_visiontek_Application_release_wrong_");
-			*Total_Device_apps=0;
-		}
 		fclose(fp);
 
 	}
-	return 0;
+	return i;
 }
-int Download_applications(int Update_count,struct RHMS DownloadApplication[Update_count])
+int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Update_count])
 {
 	fprintf(stdout,"Update_count %d \n",Update_count);
 	int i;
 	for(i=0;i<Update_count;i++)
-		fprintf(stdout,"DownloadApplication[%d].Type = %s,DownloadApplication[%d].Name = %s,DownloadApplication[%d].URL = %s,DownloadApplication[%d].Version = %f\n",i,DownloadApplication[i].Type,i,DownloadApplication[i].Name,i,DownloadApplication[i].URL,i,DownloadApplication[i].Version);
-
+		fprintf(stdout,"DownloadFirmware[%d].URL = %s,DownloadFirmware[%d].Version = %f\n",i,DownloadFirmware[i].URL,i,DownloadFirmware[i].Version);
 
 	return 0;
 }
