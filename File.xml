@@ -1,0 +1,22 @@
+
+<DEVICE_DETAILS>
+	<SerialNo>23456</SerialNo>
+	<Date_Time>25012020123230</Date_Time>
+	<TerminalID>1817161509</TerminalID>
+	<Macid>7C:F0:BA:FD:C1:75</Macid>
+	<UbootImageName>GL11-UB-2009.08-1410-1.0.bin</UbootImageName>
+	<KernelImageName>GL11-KR-3.0.35-1411-1.0.IMG</KernelImageName>
+	<RootfsImageName>GL11-RD-EXT3-1446-1.0.IMG</RootfsImageName>
+	<IMEInumber>863789021521335</IMEInumber>
+	<UID>2b1891d4e31731ae</UID>
+	<IritechSno>F0012000000179</IritechSno>
+	<PinpadSN>ERROR</PinpadSN>
+	<BarcodeSno>F0012000000179</BarcodeSno>
+	<GSMVersion>35316B09SIM5360E</GSMVersion>
+	<GSM_Module>SIM5360E</GSM_Module>
+	<WSSN>c8:9c:dc:32:a4:05</WSSN>
+	<CamType>1f63:f001</CamType>
+	<FPScannerid>A9E82A085B7520A072E3A1664214AD6F</FPScannerid>
+</DEVICE_DETAILS>
+
+
