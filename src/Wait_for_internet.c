@@ -1,4 +1,5 @@
 #include<header.h>
+int Check_internet_by_hostname(char *host);
 static int retrieve_nw_details(void);
 static int retrieve_nw_details(void)
 {        

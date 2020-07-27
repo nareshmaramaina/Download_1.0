@@ -1,10 +1,11 @@
-include<header.h>
+#include<header.h>
+extern char SerialID[24];
 
-int Download_lock()
+int Firm_Apps_Download_lock()
 {
 	int fd,ret=0;
 
-	fd = open("/tmp/.Download_lock",O_CREAT | O_CLOEXEC);
+	fd = open("/tmp/.Firm_Apps_Download_lock",O_CREAT | O_CLOEXEC);
 
 	ret = flock(fd,LOCK_EX|LOCK_NB);
 
@@ -20,112 +21,68 @@ int Download_lock()
 
 int main()
 {
-	short int i,App_Apply = 0, Firmware_Apply = 0;
-	short int RHMS_ret,ret;
-	DIR *dp=NULL;
+	short int ret;
 
-	memset(&RHMS_Server,0,sizeof(struct Download_rhms));
-	memset(&Device,0,sizeof(struct POS));
+	system("mkdir -p /mnt/sysuser/Software-Upgrade/Firmware_Downloads/");
+	system("mkdir -p /mnt/sysuser/Software-Upgrade/Applications_Downloads/");
 
+	fprintf(stdout,"\n*****************\nApp	: Download ( Firmware and Application )\nVersion	: 1.0\n*****************\n");
 
-	system("mkdir -p /mnt/sysuser/App-Upgrade/");
-	system("mkdir -p /mnt/sysuser/Firmware-Upgrade/");
-
-	fprintf(stdout,"\n*****************\nApp	: Download ( Firmware and Application )\nVersion	: 1.3\n*****************\n");
-
-	ret = Download_lock();
+	ret = Firm_Apps_Download_lock();
 
 	if(ret < 0)    /* Case is Not To run Twice*/
 	{
 		fprintf(stderr,"Download Application is already Running\n");
 		return -1;
 	}
+	ret = Get_SerialID(SerialID);
+	if ( ret != 0)
+	{
+		fprintf(stderr,"SerialID Error, %s, Please Set Unique MachineId\n",SerialID);
+		return -1;
+	}
+
+
+	Update_Configured_Server_Addr();
 
 	while(1)
 	{
 
-		if( ( access("/mnt/sysuser/Firmware-Upgrade/download_complete",F_OK) == 0 ) && ( ( dp = opendir("/mnt/sysuser/Firmware-Upgrade/Extract/")) != NULL)  )
+		if( ( access("/mnt/sysuser/Software-Upgrade/Firmware_Downloads/Install_Firmwares",F_OK) == 0 )   )
+			fprintf(stdout,"\n\033[1m\033[32m Firmware Downloads Completed, Reboot to Apply Patches ( Battery is Mandatory )\33[0m\n");
 
+		if( ( access("/mnt/sysuser/Software-Upgrade/Applications_Downloads/Install_Applications",F_OK) == 0 )  )
+			fprintf(stdout,"\n\033[1m\033[32m Application Downloads Completed, Reboot to Apply Patches ( Battery is Mandatory )\33[0m\n");
+
+		Wait_for_internet();
+
+		ret = Firmware_Request_and_Response(); 
+		if ( ret == -2 )
 		{
-			fprintf(stdout,"\n\033[1m\033[32mFirmware Downloads Completed, Reboot to Apply Patches ( Battery is Mandatory )\33[0m\n");
-
-			Firmware_Apply =1 ;
+			fprintf(stdout,"Please Do Register SerialID number in Suitable project, SerialID = %s\n", SerialID ); 
+			return ret;
 		}
-		if( ( access("/mnt/sysuser/App-Upgrade/download_complete",F_OK) == 0 ) && ( (dp = opendir("/mnt/sysuser/App-Upgrade/Extract/")) != NULL)  )
-		{
-			fprintf(stdout,"\n\033[1m\033[32mApplication Downloads Completed, Reboot to Apply Patches ( Battery is Mandatory )\33[0m\n");
-
-			Send_Update_singal_to_app();
-			App_Apply =1;
-		}       
-
-
-		if ( Firmware_Apply == 1 && App_Apply == 1 )
-		{
-			fprintf(stdout,"Reboot the Device for Applying Firmware and Application Patches\n");
-			sleep(60*60*1); // Wait for 1 hours
-			continue;
-		}
-
+		else if ( ret == 0 )
+			fprintf(stdout,"Firmware Request  and Response done Successfully\n");
 		else 
-		{	
-			Wait_for_internet();
+			fprintf(stderr,"Firmware Request Failure\n");
 
-			for ( i = 0; i < 6 ;i++)
-			{
-				RHMS_ret = get_RHMS_response();
-
-				if ( RHMS_ret == -404 )
-					continue;
-
-				else break;
-			}
-
-		}
-
-
-		if (  Firmware_Apply != 1 )
+		ret = Applications_Request_and_Response();
+		if ( ret == -2 )
 		{
-			get_POS_Firmware_version();
-
-			if ( Device.FirmWarePatchVersion < RHMS_Server.FirmWarePatchVersion )
-			{
-				fprintf(stdout,"Device Firmware Update Found\n");
-				Download_Firmware_Updates();			
-			}
-			else fprintf(stdout,"\nNo Firmware Updates\n");
-			fprintf(stdout,"\nDevice.FirmWarePatchVersion = %.1f RHMS_Server.FirmWarePatchVersion = %.1f\n", Device.FirmWarePatchVersion,RHMS_Server.FirmWarePatchVersion);
+			fprintf(stdout,"Please Do Register SerialID number in Suitable project, SerialID = %s\n", SerialID ); 
+			return ret;
 		}
+		else if ( ret == 0 )
+			fprintf(stdout,"Applications Request and Response done Successfully\n");
+		else 
+			fprintf(stderr,"Applications Request Failure\n");
 
-		if ( App_Apply != 1 )
-		{
+		Download_Firmware_Updates();			
 
-			get_POS_Application_version();
+		Download_Application_Updates();
 
-			if ( Device.ApplicationVersion < RHMS_Server.ApplicationVersion )
-			{
-				fprintf(stdout,"\nApplication Update Found\n");
-				Download_Application_Updates();
-			}
-			else fprintf(stdout,"\nNo Application Updates\n");
-			fprintf(stdout,"\n,Device.ApplicationVersion = %.1f RHMS_Server.ApplicationVersion = %.1f\n",Device.ApplicationVersion,RHMS_Server.ApplicationVersion);
-
-		}
-
-		if ( RHMS_ret == -404 )
-		{
-			fprintf(stdout,"Waiting  2mins for Server Connection ");
-			sleep(60*2);
-
-		}
-		else
-		{	
-			fprintf(stdout,"Waiting for New Updates (  Application and Firmware ), sleep 3 hours\n");
-			sleep(120);
-			//sleep(60*60*3); // Wait for 3 hours
-
-		}
-
+		sleep(60*60*1); // Wait for 1 hours
 	}
 
 	return 0;

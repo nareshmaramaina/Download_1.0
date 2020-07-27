@@ -30,80 +30,37 @@
 #include <dlfcn.h>
 #include <sys/types.h>
 #include <signal.h>
-
-struct Download_rhms
-{
-	char RTMServerIP[128];
-	char ApplicationImageName[64];
-	char ProjectName[64];
-	char PortNo[32];
-	char FTP_PATH_APP[2048];
-	char FTP_PATH_FIRMWARE[2048];
-	float ApplicationVersion;
-	float FirmWarePatchVersion;
-};
-struct Download_rhms RHMS_Server;
-
-struct POS 
-{
-	float ApplicationVersion;
-	float FirmWarePatchVersion;
-}Device;
-
-struct Download
-{
-	int Total_Updates_count;
-	float Update_Version[100];
-}patch;
-#define RHMS_Response_file "/tmp/.response_file.xml"
-#define ACTIVE_MODE 1
-#define PASSIVE_MODE 2
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-int Download_Firmware_Updates(void);
+#include <unistd.h>
+#include<stdio.h>
+#include<string.h>
+#include <stdlib.h>
+#include<time.h>
+#include <sys/time.h>
+#include <sys/signal.h>
+#include <pthread.h>
+#include <termios.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <net/if.h>
+int App_updates();
+int Firmware_updates();
+int Get_format_machineid(char *);
+int get_macid(char *);
+int Get_SerialID(char *SerialID);
+int firmware_request();
+int applications_request();
+int Request(int request_no); //1 Firmware_Request, 2 Application_Request, remain numbres unknown requests
+int Parse_Application_response_xml();
+int Parse_Firmware_response_xml();
+int  Update_Configured_Server_Addr();
+int  Firm_Apps_Download_lock();
+int Update_Configured_Server_Addr();
+void Wait_for_internet();
+int  Firmware_Request_and_Response();
+int  Applications_Request_and_Response();
+int Download_Firmware_Updates();
+int Download_Application_Updates();
 int Download_Application_Updates(void);
-int get_RHMS_response();
-void get_POS_Firmware_version();
-void get_POS_Application_version();
-int  Download_config(int); // 1 - Firmware type config Download
-int Download_patch(int); // 1 - Firmware type patch Download
-int Download_lock();
-int get_Machineid(char *machineid);
-int get_macid(char *macid);
-int wait_for_data(int sockfd,int timeout);
-int get_device_serialnumber(char *serialnum);  // Updating Device serial number in RHMS health structures
-int get_RHMS_Server_details(void);
-void Wait_for_internet(void);
-int Check_internet_by_hostname(char *host);
-int Parsing_ACK_from_Server(); 
-int wget_download (char *url,char *filename); // Mode= Active or Passive, retry_count =retry count to wget
-int get_updates_info(int Type);
-int Apply_Firmware_Patch(float patch_toUpdate );
-int Apply_Application_Patch(float patch_toUpdate );
-int Update_script();
-void Send_Update_singal_to_app();
+int Download_Firmware_Updates(void);
+

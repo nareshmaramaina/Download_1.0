@@ -1,6 +1,8 @@
 #include <libxml/tree.h>
 #include <libxml/parser.h>
-//#include <header.h>
+#include <header.h>
+extern char *Application_response_file;
+extern char *Firmware_response_file;
 
 int parseStory (xmlDocPtr doc, xmlNodePtr cur,char *output_file)
 {
@@ -33,9 +35,8 @@ int Parse_Firmware_response_xml(void)
 	xmlNodePtr cur;
 	xmlChar *key;
 	FILE *fp=NULL;
-	char *docname="/opt/Firmware_response.xml";
 	char *Output_file="/etc/Firmware_release";
-	doc = xmlParseFile(docname);
+	doc = xmlParseFile(Firmware_response_file);
 
 	if (doc == NULL ) 
 		return -1;
@@ -85,10 +86,9 @@ int Parse_Application_response_xml(void)
 {
 	xmlDocPtr doc;
 	xmlNodePtr cur;
-	char *docname="/opt/Application_response.xml";
 	char *Output_file="/etc/Application_release";
 
-	doc = xmlParseFile(docname);
+	doc = xmlParseFile(Application_response_file);
 
 	if (doc == NULL ) 
 		return -1;
@@ -116,9 +116,9 @@ int Parse_Application_response_xml(void)
 	xmlFreeDoc(doc);
 	return 0;
 }
-int main()
+/*int main()
 {
 	Parse_Application_response_xml();
 	Parse_Firmware_response_xml(); 
 	return 0;
-}
+}*/
