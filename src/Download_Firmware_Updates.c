@@ -1,17 +1,14 @@
 #include<header.h>
-struct RHMSFirmware
-{
-	char URL[512];
-	float Version;
-};
+char *Server_Firmware_release_file="/etc/Firmware_release";
+char *Device_Firmware_release_file="/etc/visiontek_Firmware_release";
 int Firmware_updates( int Total_Current_Server_Apps);
 int Get_Server_Firmwares_Count();
-int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Update_count]);
+int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Update_count],char *);
 int Download_Firmware_Updates(void)
 {
 	int Total_Current_Server_Apps=0;
 	Total_Current_Server_Apps = Get_Server_Firmwares_Count();
-	fprintf(stdout,"Total_Current_Server_Apps = %d\n",Total_Current_Server_Apps);
+	fprintf(stdout,"Total Current Firmware Server Apps = %d\n",Total_Current_Server_Apps);
 	if ( Total_Current_Server_Apps < 0)
 		return -1;
 	Firmware_updates(Total_Current_Server_Apps);	
@@ -32,10 +29,10 @@ int Firmware_updates( int Total_Current_Server_Apps)
 	int i,check=0, ret ,  Total_Server_Apps=0;
 	memset(ServerFirmware,0,sizeof(ServerFirmware));
 	memset(DownloadFirmware,0,sizeof(DownloadFirmware));
-	fp = fopen("/etc/Firmware_release","r");
+	fp = fopen(Server_Firmware_release_file,"r");
 	if(fp == NULL)
 	{
-		fprintf(stdout," /etc/Firmware_release  file not found \n");
+		fprintf(stdout," %s  file not found \n",Server_Firmware_release_file);
 		return -1;
 	}
 
@@ -52,7 +49,7 @@ int Firmware_updates( int Total_Current_Server_Apps)
 			}
 			else 
 			{
-				fprintf(stdout,"FirmwareName check Error: Wrong Firmware Response in /etc/Firmware_release\n");
+				fprintf(stdout,"FirmwareName check Error: Wrong Firmware Response in %s\n",Server_Firmware_release_file);
 				return -1;
 			}
 
@@ -67,7 +64,7 @@ int Firmware_updates( int Total_Current_Server_Apps)
 			}
 			else 
 			{	
-				fprintf(stdout,"Version check Error: Wrong Firmware Response in /etc/Firmware_release\n");
+				fprintf(stdout,"Version check Error: Wrong Firmware Response in %s\n",Server_Firmware_release_file);
 				return 0;
 			}
 		}
@@ -84,7 +81,7 @@ int Firmware_updates( int Total_Current_Server_Apps)
 			}
 			else
 			{
-				fprintf(stdout,"FirmwareURL check Error: Wrong Firmware Response in /etc/Firmware_release\n");
+				fprintf(stdout,"FirmwareURL check Error: Wrong Firmware Response in %s\n",Server_Firmware_release_file);
 				return 0;
 			}
 		}
@@ -96,18 +93,23 @@ int Firmware_updates( int Total_Current_Server_Apps)
 
 	Total_Server_Apps = i;
 	fprintf(stdout," Total_Server_Apps = %d\n", Total_Server_Apps);
+	if ( Total_Server_Apps == 0 )
+	{
+	fprintf(stdout,"Something Went Wrong with Firmware parse/request call , Empty Response came\n");
+	return -1;
+	}
 	free(line);
 	line=NULL;
 	fclose(fp);
 
-	for(i=0;i<Total_Server_Apps;i++)
-		fprintf(stdout,"FirmwareName=%s,FirmwareVersion= %.1f FirmwareURL = %s\n",ServerFirmwareName,ServerFirmware[i].Version,ServerFirmware[i].URL);
+	//	for(i=0;i<Total_Server_Apps;i++)
+	//		fprintf(stdout,"FirmwareName=%s,FirmwareVersion= %.1f FirmwareURL = %s\n",ServerFirmwareName,ServerFirmware[i].Version,ServerFirmware[i].URL);
 
 
-	fp = fopen("/etc/visiontek_Firmware_release","r");
+	fp = fopen(Device_Firmware_release_file,"r");
 	if(fp == NULL)
 	{
-		fprintf(stdout," /etc/visiontek_Firmware_release  file not found \n");
+		fprintf(stdout," %s  file not found \n",Device_Firmware_release_file);
 	}
 	else 
 	{
@@ -129,7 +131,7 @@ int Firmware_updates( int Total_Current_Server_Apps)
 				}
 				else 
 				{	
-					fprintf(stdout,"FirmwareName Error : Wrong Firmware Response in /etc/visiontek_Firmware_release\n");
+					fprintf(stdout,"FirmwareName Error : Wrong Firmware Response in %s\n",Device_Firmware_release_file);
 					return 0;
 				}
 			}
@@ -146,10 +148,9 @@ int Firmware_updates( int Total_Current_Server_Apps)
 	ret = strcmp(ServerFirmwareName,DeviceFirmwareName);
 	if ( ret != 0) 
 	{
-
-		fprintf(stdout,"Firmware Name Got Changed\n");
-		system("cat /etc/visiontek_Firmware_release >> /etc/.visiontek_Firmware_release_Changed");
-		remove("/etc/visiontek_Firmware_release");	
+		fprintf(stdout,"Firmware Name Newly Added or Got Changed by server\n");
+		//	system("cat %s >> /etc/.visiontek_Firmware_release_Changed");
+		//		remove(Device_Firmware_release_file);	
 	}
 
 	if( ServerFirmware[0].Version > DeviceFirmwareVersion )
@@ -162,7 +163,12 @@ int Firmware_updates( int Total_Current_Server_Apps)
 			{
 				if ( strlen(ServerFirmware[i].URL) < 12 )
 				{
-					fprintf(stdout,"URL Not found,  FirmwareName = %s ServerFirmwareVersion = %f \n",ServerFirmwareName,ServerFirmware[i].Version );
+					fprintf(stdout,"URL Not found / Not Correct,  FirmwareName = %s ServerFirmwareVersion = %f \n",ServerFirmwareName,ServerFirmware[i].Version );
+					continue;
+				}
+				if ( strlen(ServerFirmwareName) <= 0 || ServerFirmware[i].Version <= 0.0 )
+				{
+					fprintf(stdout,"URL Not found / Not Correct,  FirmwareName = %s ServerFirmwareVersion = %f \n",ServerFirmwareName,ServerFirmware[i].Version );
 					continue;
 				}
 				strcpy(DownloadFirmware[Update_count].URL,ServerFirmware[i].URL);
@@ -173,14 +179,14 @@ int Firmware_updates( int Total_Current_Server_Apps)
 			}
 
 		}
-		Download_firmwares(Update_count,DownloadFirmware);
+		Download_firmwares(Update_count,DownloadFirmware,ServerFirmwareName);
 	}
 
 	else 
 		fprintf(stdout,"No Update Found,  FirmwareName = %s, Current DeviceFirmwareVersion = %f\n",DeviceFirmwareName, DeviceFirmwareVersion);
 
 
-	return 0;
+	return Update_count;
 }
 int Get_Server_Firmwares_Count()
 {
@@ -189,10 +195,10 @@ int Get_Server_Firmwares_Count()
 	char *line=NULL;
 	int i;
 	size_t len;
-	fp = fopen("/etc/Firmware_release","r");
+	fp = fopen(Server_Firmware_release_file,"r");
 	if(fp == NULL)
 	{
-		fprintf(stdout," /etc/Firmware_release  file not found \n");
+		fprintf(stdout," %s  file not found \n",Server_Firmware_release_file);
 		return -1;
 	}
 	else 
@@ -205,12 +211,38 @@ int Get_Server_Firmwares_Count()
 	}
 	return i;
 }
-int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Update_count])
+int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Update_count],char *FirmwareName)
 {
-	fprintf(stdout,"Update_count %d \n",Update_count);
-	int i;
-	for(i=0;i<Update_count;i++)
-		fprintf(stdout,"DownloadFirmware[%d].URL = %s,DownloadFirmware[%d].Version = %f\n",i,DownloadFirmware[i].URL,i,DownloadFirmware[i].Version);
+	char FileName_with_path[320];
+	char path[310];
+	char cmd[320];
+	int i,ret;
 
+	fprintf(stdout,"Firmware Update count %d \n",Update_count);
+	//for(i=0;i<Update_count;i++)
+	for(i=Update_count-1;i>=0;i--)
+	{
+		memset(path,0,sizeof(path));
+		memset(cmd,0,sizeof(cmd));
+		memset(FileName_with_path,0,sizeof(FileName_with_path));
+		sprintf(path,"/mnt/sysuser/Software-Upgrade/Firmware_Downloads/%s",FirmwareName);
+		sprintf(cmd,"mkdir -p %s",path);
+
+		system(cmd);
+
+		sprintf(FileName_with_path,"%s/firmware-%.1f.zip",path,DownloadFirmware[i].Version);
+
+		ret = Download_Update(DownloadFirmware[i].URL,FileName_with_path);
+
+		if ( ret == 0 )
+		{
+			fprintf(stdout,"%s File Download Success\n",FileName_with_path);
+			Add_to_installation(FileName_with_path,1);
+		}
+		else
+			fprintf(stdout,"%s File Download Failure\n",FileName_with_path);
+
+		//fprintf(stdout,"DownloadFirmware[%d].URL = %s,DownloadFirmware[%d].Version = %f\n",i,DownloadFirmware[i].URL,i,DownloadFirmware[i].Version);
+	}
 	return 0;
 }

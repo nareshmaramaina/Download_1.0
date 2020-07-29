@@ -18,8 +18,6 @@ static int retrieve_nw_details(void)
 
 	fread(buff,1,sizeof(buff),fp);
 
-	fprintf(stdout,"/var/gprs/ buff = %s\n",buff);
-
 	fclose(fp);
 
 	if( ( buff[2]  == 'E' ) || ( buff[2]  == 'H' ) || ( buff[2]  == 'L' ) ||  buff[2]  == 'W' ||  buff[2]  == 'X')

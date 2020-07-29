@@ -43,6 +43,26 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <net/if.h>
+struct RHMSApplication
+{
+	char Type[128];
+	char Name[128];
+	char URL[512];
+	float Version;
+};
+
+struct POSApplication 
+{
+	char Type[128];
+	char Name[128];
+	float Version;
+};
+struct RHMSFirmware
+{
+	char URL[512];
+	float Version;
+};
+int Add_to_installation(char *patch,int type); // Type 1 for Firmware 2 for Application
 int App_updates();
 int Firmware_updates();
 int Get_format_machineid(char *);
@@ -63,4 +83,5 @@ int Download_Firmware_Updates();
 int Download_Application_Updates();
 int Download_Application_Updates(void);
 int Download_Firmware_Updates(void);
+int Download_Update(char *URL, char *Filename_with_Download_Location);
 

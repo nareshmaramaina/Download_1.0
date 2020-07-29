@@ -23,10 +23,10 @@ int main()
 {
 	short int ret;
 
-	system("mkdir -p /mnt/sysuser/Software-Upgrade/Firmware_Downloads/");
-	system("mkdir -p /mnt/sysuser/Software-Upgrade/Applications_Downloads/");
+//	system("mkdir -p /mnt/sysuser/Software-Upgrade/Firmware_Downloads/");
+//	system("mkdir -p /mnt/sysuser/Software-Upgrade/Applications_Downloads/");
 
-	fprintf(stdout,"\n*****************\nApp	: Download ( Firmware and Application )\nVersion	: 1.0\n*****************\n");
+	fprintf(stdout,"\n*****************\nApp	: Download ( Firmware and Applications )\nVersion	: 1.0\n*****************\n");
 
 	ret = Firm_Apps_Download_lock();
 
@@ -81,7 +81,8 @@ int main()
 		Download_Firmware_Updates();			
 
 		Download_Application_Updates();
-
+		
+		fprintf(stdout,"Download sleep for 1 hr\n");
 		sleep(60*60*1); // Wait for 1 hours
 	}
 

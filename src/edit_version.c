@@ -35,10 +35,7 @@ int Download_applications(int Update_count,struct RHMSApplication DownloadApplic
 		ret = Download_Update(DownloadApplication[i].URL,FileName_with_path);
 
 		if ( ret == 0 )
-		{
 			fprintf(stdout,"%s File Download Success\n",FileName_with_path);
-			Add_to_installation(FileName_with_path,2); // 2 for Applications 
-		}
 		else 
 			fprintf(stdout,"%s File Download Failure\n",FileName_with_path);
 
@@ -230,12 +227,7 @@ int App_updates(int Total_Current_Device_Apps, int Total_Current_Server_Apps)
 		{
 			if ( strlen(ServerApplication[i].URL) < 12 )
 			{
-				fprintf(stdout,"URL Not found/ Not Correct,  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
-				continue;
-			}
-			if ( strlen(ServerApplication[i].Type) <= 0 || strlen(ServerApplication[i].Name) <= 0 || ServerApplication[i].Version <=0.0 )
-			{
-				fprintf(stdout,"Type/Name/Version Not Found / Not Correct  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
+				fprintf(stdout,"URL Not found,  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
 				continue;
 			}
 			if ( j == Total_Device_Apps )
@@ -250,68 +242,5 @@ int App_updates(int Total_Current_Device_Apps, int Total_Current_Server_Apps)
 
 	Download_applications(Update_count,DownloadApplication);
 
-	return Update_count;
-}
-int Get_Server_And_Device_Applications_Count(int *Total_Device_apps,int *Total_Server_apps)
-{
-	FILE *fp = NULL;
-
-	char *line=NULL;
-	int i,j;
-	size_t len;
-	fp = fopen(Server_Application_release_file,"r");
-	if(fp == NULL)
-	{
-		fprintf(stdout," %s  file not found \n",Server_Application_release_file);
-		return -1;
-	}
-	else 
-	{
-		for(i=0,j=0;getline(&line, &len, fp) > 0;)
-		{
-			if(	strstr(line,"ApplicationType:") != NULL)
-				i++;	
-			else if(	strstr(line,"ApplicationName:")  != NULL)
-				j++;
-
-		}
-		if( i == j )
-			*Total_Server_apps=i;
-		else 
-		{
-			fprintf(stdout,"Wrong Response in %s, We Can't Continue \n",Server_Application_release_file); 
-			return -1;
-		}	
-		fclose(fp);
-
-	}
-	fp = fopen(Device_Application_release_file,"r");
-	if(fp == NULL)
-	{
-		fprintf(stdout," %s  file not found \n",Device_Application_release_file);
-		*Total_Device_apps=0;
-	}
-
-	else 
-	{
-		for(i=0,j=0;getline(&line, &len, fp) > 0;)
-		{
-			if(	strstr(line,"ApplicationType:") != NULL)
-				i++;
-			else if(	strstr(line,"ApplicationName:") != NULL)
-				j++;
-
-		}
-		if( i == j )
-			*Total_Device_apps=i;
-		else
-		{
-			fprintf(stdout,"Wrong Response in %s, moving  to bkp apply All application patches \n",Device_Application_release_file);
-		//	system("mv %s /etc/.__Rejected_visiontek_Application_release_wrong_");
-			*Total_Device_apps=0;
-		}
-		fclose(fp);
-
-	}
 	return 0;
 }

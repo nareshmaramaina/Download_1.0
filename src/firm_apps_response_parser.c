@@ -60,7 +60,6 @@ int Parse_Firmware_response_xml(void)
 		fprintf(stderr,"Error: %s  Not Created\n",Output_file);
 		return -1;
 	}
-
 	for(cur = cur->xmlChildrenNode; cur != NULL; cur = cur->next)
 	{
 		if (!xmlStrcmp(cur->name, (const xmlChar *) "Dependencies"))
@@ -76,7 +75,9 @@ int Parse_Firmware_response_xml(void)
 		key = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
 		if ( key )
 			fprintf(fp,"%s:%s\n", cur->name, key);
+
 	}
+	fclose(fp);
 	fprintf(stdout,"Extracted Successfully in %s\n",Output_file);
 
 	xmlFreeDoc(doc);
