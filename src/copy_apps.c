@@ -1,16 +1,18 @@
 #include<header.h>
 extern char *Server_Application_release_file;
-int App_updates( int Total_Current_Server_Apps);
+char *Device_Application_release_file="/etc/visiontek_Application_release";
+int App_updates(int Total_Current_Device_Apps, int Total_Current_Server_Apps);
 int Get_Total_Server_Apps();
 int Get_Total_Device_Apps();
 int Download_Application_Updates(void)
 {
-	int Total_Current_Server_Apps=0;
+	int Total_Current_Device_Apps=0, Total_Current_Server_Apps=0;
+	Total_Current_Device_Apps = Get_Total_Device_Apps();
 	Total_Current_Server_Apps = Get_Total_Server_Apps();
-	fprintf(stdout,"Total_Current_Server_Apps = %d\n", Total_Current_Server_Apps);
+	fprintf(stdout,"Total_Current_Device_Apps = %d, Total_Current_Server_Apps = %d\n",Total_Current_Device_Apps, Total_Current_Server_Apps);
 	if( Total_Current_Server_Apps > 0 )
-		App_updates(Total_Current_Server_Apps);
-	else fprintf(stdout," No Server Apps Found, Apps request/response not happened    \n");	
+		App_updates(Total_Current_Device_Apps,Total_Current_Server_Apps);
+	else fprintf(stdout," Server Apps Not Found \n");	
 	return 0;
 }
 int Download_applications(int Update_count,struct RHMSApplication DownloadApplication[Update_count])
@@ -31,19 +33,13 @@ int Download_applications(int Update_count,struct RHMSApplication DownloadApplic
 		system(cmd);
 
 		sprintf(FileName_with_path,"%s/app-%.1f.zip",path,DownloadApplication[i].Version);
-		ret = check_Download_complete(path,FileName_with_path,2);	
-		if ( ret == 0 )
-		{
-			fprintf(stdout,"ApplicationType = %s, ApplicationName = %s ApplicationVersion = %f, Already Download Completed, Ready to installation\n",DownloadApplication[i].Type,DownloadApplication[i].Name,DownloadApplication[i].Version);
-			continue;	
-		}
-		else 
-			ret = Download_Update(DownloadApplication[i].URL,FileName_with_path);
+
+		ret = Download_Update(DownloadApplication[i].URL,FileName_with_path);
 
 		if ( ret == 0 )
 		{
 			fprintf(stdout,"%s File Download Success\n",FileName_with_path);
-			Add_to_installation(path,FileName_with_path,2); // 2 for Applications 
+			Add_to_installation(FileName_with_path,2); // 2 for Applications 
 		}
 		else 
 			fprintf(stdout,"%s File Download Failure\n",FileName_with_path);
@@ -55,18 +51,18 @@ int Download_applications(int Update_count,struct RHMSApplication DownloadApplic
 }
 
 
-int App_updates( int Total_Current_Server_Apps)
+int App_updates(int Total_Current_Device_Apps, int Total_Current_Server_Apps)
 {
-	char Device_Application_release_file[300];
 	struct RHMSApplication ServerApplication[Total_Current_Server_Apps];
 	struct RHMSApplication DownloadApplication[Total_Current_Server_Apps];
-	struct POSApplication DeviceApplication;
+	struct POSApplication DeviceApplication[Total_Current_Device_Apps];;
 	FILE *fp = NULL;
 	char *line=NULL,*str=NULL;
-	int Update_count,Update_flag,Device_App_Wrong;
+	int Update_count,Update_flag;
 	size_t len=20;
-	int ret, i,j,check=0,  Total_Server_Apps=0;
+	int i,j,check=0,  Total_Device_Apps=0,  Total_Server_Apps=0;
 	memset(ServerApplication,0,sizeof(ServerApplication));
+	memset(DeviceApplication,0,sizeof(DeviceApplication));
 	memset(DownloadApplication,0,sizeof(DownloadApplication));
 	fp = fopen(Server_Application_release_file,"r");
 	if(fp == NULL)
@@ -163,54 +159,89 @@ int App_updates( int Total_Current_Server_Apps)
 	//		fprintf(stdout,"ApplicationType =%s ,ApplicationName=%s,ApplicationVersion= %.1f ApplicationURL = %s\n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version,ServerApplication[i].URL);
 
 
-	for(i=0,Update_count=0,Device_App_Wrong=0;i<Total_Server_Apps;i++)
+	fp = fopen(Device_Application_release_file,"r");
+	if(fp == NULL)
 	{
-		memset(Device_Application_release_file,0,sizeof(Device_Application_release_file));
-		sprintf(Device_Application_release_file,"/etc/vision/RHMS/Apps/%s/%s/AppUpdated.info",ServerApplication[i].Type,ServerApplication[i].Name);
-		ret = access(Device_Application_release_file,F_OK);
-		if ( ret == 0 )
+		fprintf(stdout," %s  file not found \n",Device_Application_release_file);
+	}
+	else 
+	{
+		for(i=0,j=0;getline(&line, &len, fp) > 0;)
 		{
-			memset(&DeviceApplication,0,sizeof(struct POSApplication));
-			Device_App_info_Details(Device_Application_release_file,DeviceApplication.Type,DeviceApplication.Name,&DeviceApplication.Version );
-			if (  strcmp(ServerApplication[i].Type,DeviceApplication.Type) == 0 && strcmp(ServerApplication[i].Name,DeviceApplication.Name) ==  0  )
+			if((str = (char *)strstr(line,"ApplicationType:")) != NULL)
+			{
+				strcpy(DeviceApplication[i].Type,str+16);
+				if(DeviceApplication[i].Type[ strlen(DeviceApplication[i].Type) -1 ] == '\n')
+					DeviceApplication[i].Type[ strlen(DeviceApplication[i].Type) - 1 ]='\0';
+				i++;
+			}
+			else if((str = (char *)strstr(line,"ApplicationName:")) != NULL)
+			{
+				strcpy(DeviceApplication[j].Name,str+16);
+				if(DeviceApplication[j].Name[strlen(DeviceApplication[j].Name)-1] == '\n')
+					DeviceApplication[j].Name[strlen(DeviceApplication[j].Name)-1]='\0';
+				j++;
+			}
+			else if((str = (char *)strstr(line,"Version:")) != NULL)
+			{
+				if( i > 0 && i == j )
+					DeviceApplication[j-1].Version  = atof(str+8);
+
+				else 
+				{	
+					fprintf(stdout," %d  %d \n", i,j);
+					fprintf(stdout,"Wrong Application Response in %s\n",Device_Application_release_file);
+					return 0;
+				}
+			}
+
+
+			else fprintf(stdout,"Line = %s \n",line);
+
+
+		}
+		Total_Device_Apps = i;
+		fprintf(stdout," Total_Device_Apps = %d\n", Total_Device_Apps);
+		free(line);
+		line=NULL;
+		fclose(fp);
+	}
+	for(i=0,Update_count=0;i<Total_Server_Apps;i++)
+	{
+
+		for ( Update_flag=0,j=0; j < Total_Device_Apps ; j++ )
+		{
+			if (  strcmp(ServerApplication[i].Type,DeviceApplication[j].Type) == 0 && strcmp(ServerApplication[i].Name,DeviceApplication[j].Name) ==  0  )
 			{
 
-				if( ServerApplication[i].Version > DeviceApplication.Version )
+				if( ServerApplication[i].Version > DeviceApplication[j].Version )
 				{
-					fprintf(stdout,"Update Found,ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f,DeviceApplicationVersion = %f\n",DeviceApplication.Type,DeviceApplication.Name,ServerApplication[i].Version , DeviceApplication.Version);
+					fprintf(stdout,"Update Found,ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f,DeviceApplicationVersion = %f\n",DeviceApplication[j].Type,DeviceApplication[j].Name,ServerApplication[i].Version , DeviceApplication[j].Version);
 
 					Update_flag=1;		
 				}
 
 				else 
-					fprintf(stdout,"No Update Found, ApplicationType = %s, ApplicationName = %s, DeviceApplicationVersion = %f\n",DeviceApplication.Type,DeviceApplication.Name, DeviceApplication.Version);
+					fprintf(stdout,"No Update Found, ApplicationType = %s, ApplicationName = %s, DeviceApplicationVersion = %f\n",DeviceApplication[j].Type,DeviceApplication[j].Name, DeviceApplication[j].Version);
 				break;
 
 			}
-			else 
-			{
-				fprintf(stdout,"Device Application Type or Application Name incorrectly defined in AppUpdated.info\n");
-				Device_App_Wrong=1;
-			}
 		}
-		else
-		{
-			Update_flag =1;
-			fprintf(stdout,"Update Found,Newly Adding  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
-		}
-		if ( Device_App_Wrong == 1 || Update_flag == 1)
+
+		if ( j == Total_Device_Apps || Update_flag == 1)
 		{
 			if ( strlen(ServerApplication[i].URL) < 12 )
 			{
-				fprintf(stdout,"URL Not found, May be no intial Update at server side / Not Correct,  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
+				fprintf(stdout,"URL Not found/ Not Correct,  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
 				continue;
 			}
 			if ( strlen(ServerApplication[i].Type) <= 0 || strlen(ServerApplication[i].Name) <= 0 || ServerApplication[i].Version <=0.0 )
 			{
-
-				fprintf(stdout,"Type/Name/Version Not Found, May be no intial Update at server side / Not Correct  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
+				fprintf(stdout,"Type/Name/Version Not Found / Not Correct  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
 				continue;
 			}
+			if ( j == Total_Device_Apps )
+				fprintf(stdout,"Update Found,Newly Adding  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
 			strcpy(DownloadApplication[Update_count].Type,ServerApplication[i].Type);
 			strcpy(DownloadApplication[Update_count].Name,ServerApplication[i].Name);
 			strcpy(DownloadApplication[Update_count].URL,ServerApplication[i].URL);
@@ -252,4 +283,3 @@ int Get_Total_Server_Apps()
 	}
 	return Total_Server_apps;
 }
-

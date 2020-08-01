@@ -1,6 +1,8 @@
 #include <libxml/tree.h>
 #include <libxml/parser.h>
 #include <header.h>
+char *Server_Firmware_release_file="/etc/vision/RHMS/Firmware/ServerFirmwareRelease.info";
+char *Server_Application_release_file="/etc/vision/RHMS/Apps/ServerApplicationsRelease.info";
 extern char *Application_response_file;
 extern char *Firmware_response_file;
 
@@ -35,9 +37,8 @@ int Parse_Firmware_response_xml(void)
 	xmlNodePtr cur;
 	xmlChar *key;
 	FILE *fp=NULL;
-	char *Output_file="/etc/Firmware_release";
+	
 	doc = xmlParseFile(Firmware_response_file);
-
 	if (doc == NULL ) 
 		return -1;
 	cur = xmlDocGetRootElement(doc);
@@ -52,12 +53,14 @@ int Parse_Firmware_response_xml(void)
 		xmlFreeDoc(doc);
 		return -1;
 	}
-
-	fp=fopen(Output_file,"w");
+	
+	system("mkdir -p /etc/vision/RHMS/Firmware/");	
+	
+	fp=fopen(Server_Firmware_release_file,"w");
 
 	if(fp == NULL)
 	{
-		fprintf(stderr,"Error: %s  Not Created\n",Output_file);
+		fprintf(stderr,"Error: %s  Not Created\n",Server_Firmware_release_file);
 		return -1;
 	}
 	for(cur = cur->xmlChildrenNode; cur != NULL; cur = cur->next)
@@ -68,7 +71,7 @@ int Parse_Firmware_response_xml(void)
 			for(cur = cur->xmlChildrenNode; cur != NULL; cur = cur->next)
 			{
 				if (!xmlStrcmp(cur->name, (const xmlChar *) "Dependency"))
-					parseStory (doc, cur,Output_file);
+					parseStory (doc, cur,Server_Firmware_release_file);
 			}
 			break;
 		}
@@ -78,7 +81,7 @@ int Parse_Firmware_response_xml(void)
 
 	}
 	fclose(fp);
-	fprintf(stdout,"Extracted Successfully in %s\n",Output_file);
+	fprintf(stdout,"Extracted Successfully in %s\n",Server_Firmware_release_file);
 
 	xmlFreeDoc(doc);
 	return 0;
@@ -87,7 +90,6 @@ int Parse_Application_response_xml(void)
 {
 	xmlDocPtr doc;
 	xmlNodePtr cur;
-	char *Output_file="/etc/Application_release";
 
 	doc = xmlParseFile(Application_response_file);
 
@@ -105,21 +107,23 @@ int Parse_Application_response_xml(void)
 		xmlFreeDoc(doc);
 		return -1;
 	}
-	remove(Output_file);
+
+	system("mkdir -p /etc/vision/RHMS/Apps/");	
+	remove(Server_Application_release_file);
 	for(cur = cur->xmlChildrenNode; cur != NULL; cur = cur->next)
 	{
 		if (!xmlStrcmp(cur->name, (const xmlChar *) "ApplicationStatusResponse"))
-			parseStory (doc, cur,Output_file);
+			parseStory (doc, cur,Server_Application_release_file);
 
 	}
-	fprintf(stdout,"Extracted Successfully in %s\n",Output_file);
+	fprintf(stdout,"Extracted Successfully in %s\n",Server_Application_release_file);
 
 	xmlFreeDoc(doc);
 	return 0;
 }
 /*int main()
-{
-	Parse_Application_response_xml();
-	Parse_Firmware_response_xml(); 
-	return 0;
-}*/
+  {
+  Parse_Application_response_xml();
+  Parse_Firmware_response_xml(); 
+  return 0;
+  }*/

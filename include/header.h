@@ -62,7 +62,7 @@ struct RHMSFirmware
 	char URL[512];
 	float Version;
 };
-int Add_to_installation(char *patch,int type); // Type 1 for Firmware 2 for Application
+int Add_to_installation(char *path,char *patch,int type); // Type 1 for Firmware 2 for Application
 int App_updates();
 int Firmware_updates();
 int Get_format_machineid(char *);
@@ -84,4 +84,6 @@ int Download_Application_Updates();
 int Download_Application_Updates(void);
 int Download_Firmware_Updates(void);
 int Download_Update(char *URL, char *Filename_with_Download_Location);
-
+void Update_Current_Date_with_Time(char *Date_time);
+int check_Download_complete(char *path,char *patch,int type);
+int Device_App_info_Details(char *Device_Application_release_file,char *DeviceApplicationType,char *DeviceApplicationName,float *DeviceApplicationVersion );

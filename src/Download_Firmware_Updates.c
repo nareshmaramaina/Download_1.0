@@ -1,6 +1,6 @@
 #include<header.h>
-char *Server_Firmware_release_file="/etc/Firmware_release";
-char *Device_Firmware_release_file="/etc/visiontek_Firmware_release";
+extern char *Server_Firmware_release_file;
+char *Device_Firmware_release_file="/etc/vision/RHMS/Firmware/FirmwareUpdated.info";
 int Firmware_updates( int Total_Current_Server_Apps);
 int Get_Server_Firmwares_Count();
 int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Update_count],char *);
@@ -95,8 +95,8 @@ int Firmware_updates( int Total_Current_Server_Apps)
 	fprintf(stdout," Total_Server_Apps = %d\n", Total_Server_Apps);
 	if ( Total_Server_Apps == 0 )
 	{
-	fprintf(stdout,"Something Went Wrong with Firmware parse/request call , Empty Response came\n");
-	return -1;
+		fprintf(stdout,"Something Went Wrong with Firmware parse/request call , Empty Response came\n");
+		return -1;
 	}
 	free(line);
 	line=NULL;
@@ -149,8 +149,6 @@ int Firmware_updates( int Total_Current_Server_Apps)
 	if ( ret != 0) 
 	{
 		fprintf(stdout,"Firmware Name Newly Added or Got Changed by server\n");
-		//	system("cat %s >> /etc/.visiontek_Firmware_release_Changed");
-		//		remove(Device_Firmware_release_file);	
 	}
 
 	if( ServerFirmware[0].Version > DeviceFirmwareVersion )
@@ -168,12 +166,12 @@ int Firmware_updates( int Total_Current_Server_Apps)
 				}
 				if ( strlen(ServerFirmwareName) <= 0 || ServerFirmware[i].Version <= 0.0 )
 				{
-					fprintf(stdout,"URL Not found / Not Correct,  FirmwareName = %s ServerFirmwareVersion = %f \n",ServerFirmwareName,ServerFirmware[i].Version );
+					fprintf(stdout,"Name/Version Not Found / Not Correct,  FirmwareName = %s ServerFirmwareVersion = %f \n",ServerFirmwareName,ServerFirmware[i].Version );
 					continue;
 				}
 				strcpy(DownloadFirmware[Update_count].URL,ServerFirmware[i].URL);
 				DownloadFirmware[Update_count].Version=ServerFirmware[i].Version;
-				fprintf(stdout,"Update Found,FirmwareName = %s ServerFirmwareVersion = %f,DeviceFirmwareVersion = %f\n",DeviceFirmwareName,ServerFirmware[i].Version , DeviceFirmwareVersion);
+				fprintf(stdout,"Update Found,FirmwareName = %s ServerFirmwareVersion = %f,DeviceFirmwareVersion = %f\n",ServerFirmwareName,ServerFirmware[i].Version , DeviceFirmwareVersion);
 
 				Update_count++;
 			}
@@ -216,11 +214,27 @@ int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Upd
 	char FileName_with_path[320];
 	char path[310];
 	char cmd[320];
-	int i,ret;
-
+	int i,ret,start,end;
 	fprintf(stdout,"Firmware Update count %d \n",Update_count);
-	//for(i=0;i<Update_count;i++)
-	for(i=Update_count-1;i>=0;i--)
+	if ( Update_count == 1 )
+	{
+		fprintf(stdout,"Single Firmware Update Found \n");
+		start=0;
+		end=Update_count-1;
+	}
+	else if ( Update_count > 1 )
+	{
+		fprintf(stdout,"Multiple Firmware Updates Found \n");
+		start=1;
+		end=Update_count;
+	}
+	else 
+	{
+		fprintf(stdout," Wrong Downloads cenerio\n");
+		return -1;
+	}
+	//	for(i=Update_count-1;i>=0;i--)
+	for(i=start;i<=end;i++)  // 2 
 	{
 		memset(path,0,sizeof(path));
 		memset(cmd,0,sizeof(cmd));
@@ -230,14 +244,35 @@ int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Upd
 
 		system(cmd);
 
-		sprintf(FileName_with_path,"%s/firmware-%.1f.zip",path,DownloadFirmware[i].Version);
-
-		ret = Download_Update(DownloadFirmware[i].URL,FileName_with_path);
-
+		if ( i == Update_count )
+		{
+			fprintf(stdout,"Final Version Downloading \n");
+			sprintf(FileName_with_path,"%s/firmware-%.1f.zip",path,DownloadFirmware[0].Version);
+			ret = check_Download_complete(path,FileName_with_path,1);	
+			if ( ret == 0 )
+			{
+				fprintf(stdout,"%.1f Version Already Download Completed, Ready to installation\n",DownloadFirmware[0].Version);
+				continue;	
+			}
+			else 
+				ret = Download_Update(DownloadFirmware[0].URL,FileName_with_path);
+		}
+		else 
+		{
+			sprintf(FileName_with_path,"%s/firmware-%.1f.zip",path,DownloadFirmware[i].Version);
+			ret = check_Download_complete(path,FileName_with_path,1);	
+			if ( ret == 0 )
+			{
+				fprintf(stdout,"%.1f Version Already DownloadCompleted, Ready to installation\n",DownloadFirmware[i].Version);
+				continue;	
+			}
+			else 
+				ret = Download_Update(DownloadFirmware[i].URL,FileName_with_path);
+		}
 		if ( ret == 0 )
 		{
 			fprintf(stdout,"%s File Download Success\n",FileName_with_path);
-			Add_to_installation(FileName_with_path,1);
+			Add_to_installation(path,FileName_with_path,1);
 		}
 		else
 			fprintf(stdout,"%s File Download Failure\n",FileName_with_path);

@@ -19,7 +19,6 @@ int Firmware_Request_and_Response()
 	system(cmd);
 
 	puts(cmd);
-
 	memset(cmd,0,sizeof(cmd));
 
 	sprintf(cmd,"dos2unix %s",Firmware_response_file);
@@ -50,9 +49,8 @@ int Firmware_Request_and_Response()
 	str=NULL;
 	fclose(fp);
 
-	if ( ret == 0 )	
+	if ( ret == 0 )
 		ret = Parse_Firmware_response_xml(); 
-
 	return ret; 
 
 }
