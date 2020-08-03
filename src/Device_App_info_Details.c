@@ -4,6 +4,7 @@ int Device_App_info_Details(char *Device_Application_release_file,char *DeviceAp
 	FILE *fp = NULL;
 	char *line=NULL,*str=NULL;
 	size_t len=0;
+	int flag=0;
 	fp = fopen(Device_Application_release_file,"r");
 	if(fp == NULL)
 	{
@@ -28,6 +29,7 @@ int Device_App_info_Details(char *Device_Application_release_file,char *DeviceAp
 			}
 			else if((str = (char *)strstr(line,"Version:")) != NULL)
 			{
+				flag=1;
 				*DeviceApplicationVersion  = atof(str+8);
 				break;
 			}
@@ -40,5 +42,8 @@ int Device_App_info_Details(char *Device_Application_release_file,char *DeviceAp
 		line=NULL;
 		fclose(fp);
 	}
-	return 0;
+	if ( flag == 1)
+		return 0;
+	else 
+		return -1;
 }

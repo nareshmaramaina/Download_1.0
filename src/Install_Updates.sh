@@ -178,7 +178,7 @@ Firmware_Update()
 			sync
 		fi
 		update_etc_visiontek_Firmware_release $patch $Extracted_path 
-		
+
 		#sed '/$patch/d/' Firmware_install_file
 		#rm -rf $Extracted_path
 		#rm $patch
