@@ -1,5 +1,7 @@
 #include<header.h>
 extern char SerialID[24];
+extern char *Install_Applications_file;
+extern char *Install_Firmwares_file;
 
 int Firm_Apps_Download_lock()
 {
@@ -22,11 +24,9 @@ int Firm_Apps_Download_lock()
 int main()
 {
 	short int ret;
+	int Apps_Downloads=0,Firmware_Downloads =0;
 
-//	system("mkdir -p /mnt/sysuser/Software-Upgrade/Firmware_Downloads/");
-//	system("mkdir -p /mnt/sysuser/Software-Upgrade/Applications_Downloads/");
-
-	fprintf(stdout,"\n*****************\nApp	: Download ( Firmware and Applications )\nVersion	: 1.0\n*****************\n");
+	fprintf(stdout,"\n*****************\nApp	: Firmware_and_Apps_Downloader\nVersion	: 1.0\n*****************\n");
 
 	ret = Firm_Apps_Download_lock();
 
@@ -47,12 +47,12 @@ int main()
 
 	while(1)
 	{
-
-		if( ( access("/mnt/sysuser/Software-Upgrade/Firmware_Downloads/Install_Firmwares",F_OK) == 0 )   )
-			fprintf(stdout,"\n\033[1m\033[32m Firmware Downloads Completed, Reboot to Apply Patches ( Battery is Mandatory )\33[0m\n");
-
-		if( ( access("/mnt/sysuser/Software-Upgrade/Applications_Downloads/Install_Applications",F_OK) == 0 )  )
-			fprintf(stdout,"\n\033[1m\033[32m Application Downloads Completed, Reboot to Apply Patches ( Battery is Mandatory )\33[0m\n");
+			Firmware_Downloads = Get_Total_Downloaded_Updates(FIRMWARE);
+			if ( Firmware_Downloads > 0 )
+			fprintf(stdout,"\n\033[1m\033[32m %d Firmware Downloads Completed, Reboot to Apply Patches ( Battery is Mandatory )\33[0m\n",Firmware_Downloads);
+			Apps_Downloads = Get_Total_Downloaded_Updates(APPLICATION);
+			if ( Apps_Downloads > 0 )
+		       	fprintf(stdout,"\n\033[1m\033[32m %d Application Downloads Completed, Reboot to Apply Patches ( Battery is Mandatory )\33[0m\n",Apps_Downloads);
 
 		Wait_for_internet();
 

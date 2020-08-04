@@ -1,4 +1,6 @@
 #include<header.h>
+char *Install_Applications_file="/mnt/sysuser/Software-Upgrade/Applications_Downloads/Install_Applications.info";
+char *Install_Firmwares_file="/mnt/sysuser/Software-Upgrade/Firmware_Downloads/Install_Firmwares.info";
 int Add_to_installation(char *path,char *patch,int type)
 {
 	FILE *fp=NULL;
@@ -9,10 +11,10 @@ int Add_to_installation(char *path,char *patch,int type)
 	memset(filename,0,sizeof(memset));
 	memset(Date_time,0,sizeof(Date_time));
 	memset(Download_complete_file,0,sizeof(Download_complete_file));
-	if ( type == 1 )
-		strcpy(filename,"/mnt/sysuser/Software-Upgrade/Firmware_Downloads/Install_Firmwares");	
-	else if ( type == 2 )
-		strcpy(filename,"/mnt/sysuser/Software-Upgrade/Applications_Downloads/Install_Applications");
+	if ( type == FIRMWARE )
+		strcpy(filename,Install_Firmwares_file);	
+	else if ( type == APPLICATION )
+		strcpy(filename,Install_Applications_file);
 	else 
 	{
 		fprintf(stdout,"Unknown type\n");
@@ -24,7 +26,7 @@ int Add_to_installation(char *path,char *patch,int type)
 		fprintf(stdout,"\033[1;31m Download Error: %s Download Status getting Success but file not found, Type = %d \033[0m\n",patch,type); 
 		return -1;
 	}
-	ret = check_Download_complete(path,patch,type);	
+	ret = check_Download_complete(patch,type);	
 	if ( ret == 0 || ret == 1 )
 	{
 		fprintf(stdout,"\033[1;31m Caution: Already Added For installation %s Type = %d \033[0m\n",patch,type); 
@@ -32,7 +34,7 @@ int Add_to_installation(char *path,char *patch,int type)
 	}
 	Update_Current_Date_with_Time(Date_time);
 
-	sprintf(Download_complete_file,"%s/DownloadCompleted",path);
+	sprintf(Download_complete_file,"%s/.DownloadCompletedHistory",path);
 
 	fp = fopen(Download_complete_file,"a");
 	if ( fp == NULL )
@@ -62,9 +64,8 @@ int Add_to_installation(char *path,char *patch,int type)
 
 	return 0;
 }
-int check_Download_complete(char *path,char *patch,int type)
+int check_Download_complete(char *patch,int type)
 {
-	char Download_complete_file[330];
 	FILE *fp=NULL;
 	char filename[128];
 	char *line=NULL;
@@ -72,10 +73,10 @@ int check_Download_complete(char *path,char *patch,int type)
 	int Found=0;
 	memset(filename,0,sizeof(memset));
 
-	if ( type == 1 )
-		strcpy(filename,"/mnt/sysuser/Software-Upgrade/Firmware_Downloads/Install_Firmwares");	
-	else if ( type == 2 )
-		strcpy(filename,"/mnt/sysuser/Software-Upgrade/Applications_Downloads/Install_Applications");
+	if ( type == FIRMWARE )
+		strcpy(filename,Install_Firmwares_file);	
+	else if ( type == APPLICATION )
+		strcpy(filename,Install_Applications_file);
 	else 
 	{
 		fprintf(stdout,"Unknown type\n");
@@ -99,16 +100,17 @@ int check_Download_complete(char *path,char *patch,int type)
 			break;
 		}
 	}
+	free(line);
+	line=NULL;
+	fclose(fp);
+
 	if ( Found == 1 )
 	{
-		memset(Download_complete_file,0,sizeof(Download_complete_file));
-		sprintf(Download_complete_file,"%s/DownloadCompleted",path);
-
-		if ( ( access(Download_complete_file,F_OK) == 0 ) && ( access(patch,F_OK) == 0 ) ) 
+		if (  access(patch,F_OK) == 0  ) 
 			return 0;
 		else 
 		{
-			fprintf(stdout," %s file or %s file not found \n",Download_complete_file,patch);
+			fprintf(stdout,"%s Download file not found \n",patch);
 			return 1;
 		}
 	}

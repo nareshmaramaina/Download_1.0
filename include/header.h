@@ -43,6 +43,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <net/if.h>
+#define FIRMWARE 1
+#define APPLICATION 2
 struct RHMSApplication
 {
 	char Type[128];
@@ -70,7 +72,6 @@ int get_macid(char *);
 int Get_SerialID(char *SerialID);
 int firmware_request();
 int applications_request();
-int Request(int request_no); //1 Firmware_Request, 2 Application_Request, remain numbres unknown requests
 int Parse_Application_response_xml();
 int Parse_Firmware_response_xml();
 int  Update_Configured_Server_Addr();
@@ -85,5 +86,6 @@ int Download_Application_Updates(void);
 int Download_Firmware_Updates(void);
 int Download_Update(char *URL, char *Filename_with_Download_Location);
 void Update_Current_Date_with_Time(char *Date_time);
-int check_Download_complete(char *path,char *patch,int type);
+int check_Download_complete(char *patch,int type);
+int Get_Total_Downloaded_Updates(int type);
 int Device_App_info_Details(char *Device_Application_release_file,char *DeviceApplicationType,char *DeviceApplicationName,float *DeviceApplicationVersion );

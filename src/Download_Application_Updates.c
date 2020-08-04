@@ -31,7 +31,7 @@ int Download_applications(int Update_count,struct RHMSApplication DownloadApplic
 		system(cmd);
 
 		sprintf(FileName_with_path,"%s/app-%.1f.zip",path,DownloadApplication[i].Version);
-		ret = check_Download_complete(path,FileName_with_path,2);	
+		ret = check_Download_complete(FileName_with_path,APPLICATION);	
 		if ( ret == 0 )
 		{
 			fprintf(stdout,"ApplicationType = %s, ApplicationName = %s ApplicationVersion = %f, Already Download Completed, Ready to installation\n",DownloadApplication[i].Type,DownloadApplication[i].Name,DownloadApplication[i].Version);
@@ -43,7 +43,7 @@ int Download_applications(int Update_count,struct RHMSApplication DownloadApplic
 		if ( ret == 0 )
 		{
 			fprintf(stdout,"%s File Download Success\n",FileName_with_path);
-			Add_to_installation(path,FileName_with_path,2); // 2 for Applications 
+			Add_to_installation(path,FileName_with_path,APPLICATION); // 2 arg Application Type 
 		}
 		else 
 			fprintf(stdout,"%s File Download Failure\n",FileName_with_path);

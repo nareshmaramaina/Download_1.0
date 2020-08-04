@@ -248,7 +248,7 @@ int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Upd
 		{
 			fprintf(stdout,"Final Version Downloading \n");
 			sprintf(FileName_with_path,"%s/firmware-%.1f.zip",path,DownloadFirmware[0].Version);
-			ret = check_Download_complete(path,FileName_with_path,1);	
+			ret = check_Download_complete(FileName_with_path,FIRMWARE);	
 			if ( ret == 0 )
 			{
 				fprintf(stdout,"%.1f Version Already Download Completed, Ready to installation\n",DownloadFirmware[0].Version);
@@ -260,7 +260,7 @@ int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Upd
 		else 
 		{
 			sprintf(FileName_with_path,"%s/firmware-%.1f.zip",path,DownloadFirmware[i].Version);
-			ret = check_Download_complete(path,FileName_with_path,1);	
+			ret = check_Download_complete(FileName_with_path,FIRMWARE);	
 			if ( ret == 0 )
 			{
 				fprintf(stdout,"%.1f Version Already DownloadCompleted, Ready to installation\n",DownloadFirmware[i].Version);
@@ -272,7 +272,7 @@ int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Upd
 		if ( ret == 0 )
 		{
 			fprintf(stdout,"%s File Download Success\n",FileName_with_path);
-			Add_to_installation(path,FileName_with_path,1);
+			Add_to_installation(path,FileName_with_path,FIRMWARE);
 		}
 		else
 			fprintf(stdout,"%s File Download Failure\n",FileName_with_path);
