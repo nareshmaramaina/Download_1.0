@@ -39,7 +39,7 @@ int Add_to_installation(char *path,char *patch,int type)
 	fp = fopen(Download_complete_file,"a");
 	if ( fp == NULL )
 	{
-		fprintf(stderr," Open error = %s\n",Download_complete_file);
+		fprintf(stderr," file not found %s\n",Download_complete_file);
 		return -1;
 	}
 	else
@@ -51,7 +51,7 @@ int Add_to_installation(char *path,char *patch,int type)
 	fp = fopen(filename,"a");
 	if ( fp == NULL )
 	{
-		fprintf(stderr," Open error = %s\n",filename);
+		fprintf(stderr," file not found %s\n",filename);
 		return -1;
 	}
 
@@ -59,7 +59,7 @@ int Add_to_installation(char *path,char *patch,int type)
 	{	
 		fprintf(fp,"%s\n",patch);
 		fclose(fp);
-		fprintf(stdout,"Ready for installation = %s\n",patch);
+		fprintf(stdout,"Added to patch installation list\tReady for installation = %s\n",patch);
 	}
 
 	return 0;
@@ -85,7 +85,7 @@ int check_Download_complete(char *patch,int type)
 	fp = fopen(filename,"r");
 	if ( fp == NULL )
 	{
-		fprintf(stdout," Open error = %s\n",filename);
+		fprintf(stdout," file not found %s\n",filename);
 		return -1;
 	}
 
@@ -114,7 +114,7 @@ int check_Download_complete(char *patch,int type)
 			return 1;
 		}
 	}
-	else fprintf(stdout,"Notttttt Found %s",patch);
+	else fprintf(stdout,"No previous Download completion, patch = %s\n",patch);
 
 	return -1;
 }

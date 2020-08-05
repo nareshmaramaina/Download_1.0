@@ -32,7 +32,7 @@ int Get_Total_Downloaded_Updates(int type)
 	fp = fopen(filename,"r");
 	if ( fp == NULL )
 	{
-		fprintf(stdout," Open error = %s\n",filename);
+		fprintf(stdout," file not found %s\n",filename);
 		return -1;
 	}
 

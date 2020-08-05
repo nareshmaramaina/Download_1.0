@@ -117,6 +117,7 @@ int Firmware_updates( int Total_Current_Server_Apps)
 		{
 			if((str = (char *)strstr(line,"FirmwareName:")) != NULL)
 			{
+				memset(DeviceFirmwareName,0,sizeof(DeviceFirmwareName));
 				strcpy(DeviceFirmwareName,str+13);
 				if(DeviceFirmwareName[strlen(DeviceFirmwareName)-1] == '\n')
 					DeviceFirmwareName[strlen(DeviceFirmwareName)-1]='\0';
@@ -148,7 +149,15 @@ int Firmware_updates( int Total_Current_Server_Apps)
 	ret = strcmp(ServerFirmwareName,DeviceFirmwareName);
 	if ( ret != 0) 
 	{
-		fprintf(stdout,"Firmware Name Newly Added or Got Changed by server\n");
+		if ( strlen(DeviceFirmwareName) == 0 )
+			fprintf(stdout,"Intial Firmware patch\n");
+		else
+		{
+			fprintf(stdout,"Firmware Name Newly Added or Got Changed by server\n");
+			fprintf(stdout,"Removing previous release\n");
+		}
+		DeviceFirmwareVersion=0.0;
+		remove(Device_Firmware_release_file);
 	}
 
 	if( ServerFirmware[0].Version > DeviceFirmwareVersion )
@@ -275,8 +284,12 @@ int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Upd
 			Add_to_installation(path,FileName_with_path,FIRMWARE);
 		}
 		else
+		{
 			fprintf(stdout,"%s File Download Failure\n",FileName_with_path);
-
+			if ( Update_count  > 1)
+				fprintf(stdout,"Dependencies must and Should Download and Install sequencial way, So skipping remaining Downloads\n"); 
+			return -1;
+		}
 		//fprintf(stdout,"DownloadFirmware[%d].URL = %s,DownloadFirmware[%d].Version = %f\n",i,DownloadFirmware[i].URL,i,DownloadFirmware[i].Version);
 	}
 	return 0;

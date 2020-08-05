@@ -202,13 +202,13 @@ int App_updates( int Total_Current_Server_Apps)
 		{
 			if ( strlen(ServerApplication[i].URL) < 12 )
 			{
-				fprintf(stdout,"URL Not found, May be no intial Update at server side / Not Correct,  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
+				fprintf(stdout,"URL Not found, May be intial Update at server side / Not Correct,  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
 				continue;
 			}
 			if ( strlen(ServerApplication[i].Type) <= 0 || strlen(ServerApplication[i].Name) <= 0 || ServerApplication[i].Version <=0.0 )
 			{
 
-				fprintf(stdout,"Type/Name/Version Not Found, May be no intial Update at server side / Not Correct  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
+				fprintf(stdout,"Type/Name/Version Not Found, May be intial Update at server side / Not Correct  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
 				continue;
 			}
 			strcpy(DownloadApplication[Update_count].Type,ServerApplication[i].Type);
