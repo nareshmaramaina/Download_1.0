@@ -1,32 +1,32 @@
 #include<header.h>
 extern char *Server_Firmware_release_file;
 char *Device_Firmware_release_file="/etc/vision/RHMS/Firmware/FirmwareUpdated.info";
-int Firmware_updates( int Total_Current_Server_Apps);
+int Firmware_updates( int Total_Current_Server_Firmwares);
 int Get_Server_Firmwares_Count();
 int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Update_count],char *);
 int Download_Firmware_Updates(void)
 {
-	int Total_Current_Server_Apps=0;
-	Total_Current_Server_Apps = Get_Server_Firmwares_Count();
-	fprintf(stdout,"Total Current Firmware Server Apps = %d\n",Total_Current_Server_Apps);
-	if ( Total_Current_Server_Apps < 0)
+	int Total_Current_Server_Firmwares=0;
+	Total_Current_Server_Firmwares = Get_Server_Firmwares_Count();
+	fprintf(stdout,"Total Current Firmware Server Firmwares = %d\n",Total_Current_Server_Firmwares);
+	if ( Total_Current_Server_Firmwares < 0)
 		return -1;
-	Firmware_updates(Total_Current_Server_Apps);	
+	Firmware_updates(Total_Current_Server_Firmwares);	
 	return 0;
 }
 
-int Firmware_updates( int Total_Current_Server_Apps)
+int Firmware_updates( int Total_Current_Server_Firmwares)
 {
 	float DeviceFirmwareVersion=0.0;
 	char ServerFirmwareName[128]="";
 	char DeviceFirmwareName[128]="";
-	struct RHMSFirmware ServerFirmware[Total_Current_Server_Apps];
-	struct RHMSFirmware DownloadFirmware[Total_Current_Server_Apps];
+	struct RHMSFirmware ServerFirmware[Total_Current_Server_Firmwares];
+	struct RHMSFirmware DownloadFirmware[Total_Current_Server_Firmwares];
 	FILE *fp = NULL;
 	char *line=NULL,*str=NULL;
 	int Update_count,F_check=0;
 	size_t len=0;
-	int i,check=0, ret ,  Total_Server_Apps=0;
+	int i,check=0, ret ,  Total_Server_Firmwares=0;
 	memset(ServerFirmware,0,sizeof(ServerFirmware));
 	memset(DownloadFirmware,0,sizeof(DownloadFirmware));
 	fp = fopen(Server_Firmware_release_file,"r");
@@ -91,9 +91,9 @@ int Firmware_updates( int Total_Current_Server_Apps)
 
 	}
 
-	Total_Server_Apps = i;
-	fprintf(stdout," Total_Server_Apps = %d\n", Total_Server_Apps);
-	if ( Total_Server_Apps == 0 )
+	Total_Server_Firmwares = i;
+	fprintf(stdout," Total_Server_Firmwares = %d\n", Total_Server_Firmwares);
+	if ( Total_Server_Firmwares == 0 )
 	{
 		fprintf(stdout,"Something Went Wrong with Firmware parse/request call , Empty Response came\n");
 		return -1;
@@ -102,7 +102,7 @@ int Firmware_updates( int Total_Current_Server_Apps)
 	line=NULL;
 	fclose(fp);
 
-	//	for(i=0;i<Total_Server_Apps;i++)
+	//	for(i=0;i<Total_Server_Firmwares;i++)
 	//		fprintf(stdout,"FirmwareName=%s,FirmwareVersion= %.1f FirmwareURL = %s\n",ServerFirmwareName,ServerFirmware[i].Version,ServerFirmware[i].URL);
 
 
@@ -163,7 +163,7 @@ int Firmware_updates( int Total_Current_Server_Apps)
 	if( ServerFirmware[0].Version > DeviceFirmwareVersion )
 	{
 
-		for (Update_count=0, i=0; i < Total_Server_Apps ; i++ )
+		for (Update_count=0, i=0; i < Total_Server_Firmwares ; i++ )
 		{
 
 			if( ServerFirmware[i].Version > DeviceFirmwareVersion )

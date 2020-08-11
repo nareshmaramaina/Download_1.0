@@ -40,6 +40,7 @@ void Create_Application_DownloadCompleted_file(char *path,float Version)
 		fprintf(stderr,"%s Write Error \n",DownloadCompleteFile);
 		return;
 	}
+	fprintf(stdout,"%s created Successfully\n",DownloadCompleteFile);
 
 	Update_Current_Date_with_Time(date);
 
