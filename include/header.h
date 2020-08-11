@@ -89,3 +89,6 @@ void Update_Current_Date_with_Time(char *Date_time);
 int check_Download_complete(char *patch,int type);
 int Get_Total_Downloaded_Updates(int type);
 int Device_App_info_Details(char *Device_Application_release_file,char *DeviceApplicationType,char *DeviceApplicationName,float *DeviceApplicationVersion );
+void Create_Firmware_DownloadCompleted_file(char *path,float Version);
+void Create_Application_DownloadCompleted_file(char *path,float Version);
+

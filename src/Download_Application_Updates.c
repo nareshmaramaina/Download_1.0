@@ -43,7 +43,11 @@ int Download_applications(int Update_count,struct RHMSApplication DownloadApplic
 		if ( ret == 0 )
 		{
 			fprintf(stdout,"%s File Download Success\n",FileName_with_path);
-			Add_to_installation(path,FileName_with_path,APPLICATION); // 2 arg Application Type 
+			ret = Add_to_installation(path,FileName_with_path,APPLICATION); // 2 arg Application Type
+			if ( ret == 0 )
+				Create_Application_DownloadCompleted_file(path,DownloadApplication[i].Version);	       
+			else 
+				fprintf(stderr,"Error, Failed to  Add to Installation in Application %s ",FileName_with_path);
 		}
 		else 
 			fprintf(stdout,"%s File Download Failure\n",FileName_with_path);
@@ -163,10 +167,11 @@ int App_updates( int Total_Current_Server_Apps)
 	//		fprintf(stdout,"ApplicationType =%s ,ApplicationName=%s,ApplicationVersion= %.1f ApplicationURL = %s\n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version,ServerApplication[i].URL);
 
 
-	for(i=0,Update_count=0,Device_App_Wrong=0;i<Total_Server_Apps;i++)
+	for(i=0,Update_count=0;i<Total_Server_Apps;i++)
 	{
 		memset(Device_Application_release_file,0,sizeof(Device_Application_release_file));
 		sprintf(Device_Application_release_file,"/etc/vision/RHMS/Apps/%s/%s/AppUpdated.info",ServerApplication[i].Type,ServerApplication[i].Name);
+		Device_App_Wrong=0;
 		ret = access(Device_Application_release_file,F_OK);
 		if ( ret == 0 )
 		{
@@ -182,9 +187,11 @@ int App_updates( int Total_Current_Server_Apps)
 					Update_flag=1;		
 				}
 
-				else 
+				else
+				{	
 					fprintf(stdout,"No Update Found, ApplicationType = %s, ApplicationName = %s, DeviceApplicationVersion = %f\n",DeviceApplication.Type,DeviceApplication.Name, DeviceApplication.Version);
-				break;
+					continue;
+				}
 
 			}
 			else 
@@ -218,7 +225,6 @@ int App_updates( int Total_Current_Server_Apps)
 			Update_count++;
 		}
 	}
-
 	Download_applications(Update_count,DownloadApplication);
 
 	return Update_count;

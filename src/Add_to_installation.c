@@ -62,6 +62,22 @@ int Add_to_installation(char *path,char *patch,int type)
 		fprintf(stdout,"Added to patch installation list\tReady for installation = %s\n",patch);
 	}
 
+	memset(Download_complete_file,0,sizeof(Download_complete_file));
+	
+	sprintf(Download_complete_file,"%s/.DownloadCompletedHistory",path);
+
+        fp = fopen(Download_complete_file,"a");
+        if ( fp == NULL )
+        {
+                fprintf(stderr," file not found %s\n",Download_complete_file);
+                return -1;
+        }
+        else
+        {
+                fprintf(fp,"%s\n%s\n",patch,Date_time);
+                fclose(fp);
+        }
+		
 	return 0;
 }
 int check_Download_complete(char *patch,int type)
@@ -127,7 +143,8 @@ void Update_Current_Date_with_Time(char *Date_time)
 
 	Today = localtime (&tv.tv_sec) ;
 
-	sprintf(Date_time,"Date:%02d/%02d/%04d Time:%02d-%02d-%02d",Today->tm_mday,Today->tm_mon+1,Today->tm_year+1900,Today->tm_hour,Today->tm_min,Today->tm_sec);
+	sprintf(Date_time,"%04d-%02d-%02dT%02d:%02d:%02d",Today->tm_year+1900,Today->tm_mon+1,Today->tm_mday,Today->tm_hour,Today->tm_min,Today->tm_sec);
+	fprintf(stdout,"Today Date and Time, %s \n",Date_time);
 
 	return;
 }

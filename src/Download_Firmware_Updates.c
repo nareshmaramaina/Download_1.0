@@ -243,15 +243,14 @@ int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Upd
 		return -1;
 	}
 	//	for(i=Update_count-1;i>=0;i--)
+	memset(path,0,sizeof(path));
+	memset(cmd,0,sizeof(cmd));
+	sprintf(path,"/mnt/sysuser/Software-Upgrade/Firmware_Downloads/%s",FirmwareName);
+	sprintf(cmd,"mkdir -p %s",path);
+	system(cmd);
 	for(i=start;i<=end;i++)  // 2 
 	{
-		memset(path,0,sizeof(path));
-		memset(cmd,0,sizeof(cmd));
 		memset(FileName_with_path,0,sizeof(FileName_with_path));
-		sprintf(path,"/mnt/sysuser/Software-Upgrade/Firmware_Downloads/%s",FirmwareName);
-		sprintf(cmd,"mkdir -p %s",path);
-
-		system(cmd);
 
 		if ( i == Update_count )
 		{
@@ -281,7 +280,15 @@ int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Upd
 		if ( ret == 0 )
 		{
 			fprintf(stdout,"%s File Download Success\n",FileName_with_path);
-			Add_to_installation(path,FileName_with_path,FIRMWARE);
+			ret = Add_to_installation(path,FileName_with_path,FIRMWARE);
+			if ( ret == 0 )
+				Create_Firmware_DownloadCompleted_file(path,DownloadFirmware[i].Version);	
+			else 
+			{
+				fprintf(stderr,"Error, Failed to  Add to Installation in Firmware %s ",FileName_with_path);
+				fprintf(stdout,"Dependencies must and Should Download and Install sequencial way, So skipping remaining Downloads\n"); 
+				return -1;
+			}
 		}
 		else
 		{
