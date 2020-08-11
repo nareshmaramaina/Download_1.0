@@ -64,7 +64,7 @@ struct RHMSFirmware
 	char URL[512];
 	float Version;
 };
-int Add_to_installation(char *path,char *patch,int type); // Type 1 for Firmware 2 for Application
+int Add_to_installation(float ,char *path,char *patch,int type); // Type 1 for Firmware 2 for Application
 int App_updates();
 int Firmware_updates();
 int Get_format_machineid(char *);

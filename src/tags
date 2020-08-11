@@ -1,74 +1,53 @@
 !_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
 !_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
-!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
-!_TAG_PROGRAM_NAME	Exuberant Ctags	//
-!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
-!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
-Add_to_installation	Add_to_installation.c	/^int Add_to_installation(char *path,char *patch,int type)$/;"	f
-App_updates	Download_Application_Updates.c	/^int App_updates( int Total_Current_Server_Apps)$/;"	f
-App_updates	copy_apps.c	/^int App_updates(int Total_Current_Device_Apps, int Total_Current_Server_Apps)$/;"	f
-Application_response_file	Application_request.c	/^char *Application_response_file="\/opt\/Application_response.xml";$/;"	v
-Applications_Details	edit_version.c	/^int Applications_Details(int Total_Device_Apps)$/;"	f
-Applications_Request_and_Response	Application_request.c	/^int Applications_Request_and_Response() $/;"	f
-Apply_Application_Patch	Apply_Application_Patch.c	/^int Apply_Application_Patch(float patch_toUpdate )$/;"	f
-Apply_Firmware_Patch	Apply_Firmware_patch.c	/^int Apply_Firmware_Patch(float patch_toUpdate )$/;"	f
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	//
+Add_to_installation	Add_to_installation.c	/^int Add_to_installation(char *path,char *patch,int type)$/;"	f	typeref:typename:int
+App_updates	Download_Application_Updates.c	/^int App_updates( int Total_Current_Server_Apps)$/;"	f	typeref:typename:int
+Application_response_file	Application_request.c	/^char *Application_response_file="\/opt\/Application_response.xml";$/;"	v	typeref:typename:char *
+Applications_Request_and_Response	Application_request.c	/^int Applications_Request_and_Response() $/;"	f	typeref:typename:int
 CC	makefile	/^CC= arm-none-linux-gnueabi-gcc -Wall $/;"	m
 CFLAGS	makefile	/^CFLAGS=-Wall  -I ..\/include$/;"	m
-Check_internet_by_hostname	Wait_for_internet.c	/^int Check_internet_by_hostname(char *host)$/;"	f
-Delete_From_installation	Delete_From_installation.c	/^int Delete_From_installation(char *patch_file,int type)$/;"	f
-Delete_patch	Delete_From_installation.c	/^int Delete_patch(int Total_PatchCount,char *patch_file,int type)$/;"	f
-Device_App_info_Details	Device_App_info_Details.c	/^int Device_App_info_Details(char *Device_Application_release_file,char *DeviceApplicationType,char *DeviceApplicationName,float *DeviceApplicationVersion )$/;"	f
-Device_Application_release_file	copy_apps.c	/^char *Device_Application_release_file="\/etc\/visiontek_Application_release";$/;"	v
-Device_Firmware_release_file	Download_Firmware_Updates.c	/^char *Device_Firmware_release_file="\/etc\/vision\/RHMS\/Firmware\/FirmwareUpdated.info";$/;"	v
-Download_Application_Updates	Download_Application_Updates.c	/^int Download_Application_Updates(void)$/;"	f
-Download_Application_Updates	copy_apps.c	/^int Download_Application_Updates(void)$/;"	f
-Download_Firmware_Updates	Download_Firmware_Updates.c	/^int Download_Firmware_Updates(void)$/;"	f
-Download_Update	Download_Update.c	/^int Download_Update(char *URL, char *Filename_with_Download_Location)$/;"	f
-Download_applications	Download_Application_Updates.c	/^int Download_applications(int Update_count,struct RHMSApplication DownloadApplication[Update_count])$/;"	f
-Download_applications	copy_apps.c	/^int Download_applications(int Update_count,struct RHMSApplication DownloadApplication[Update_count])$/;"	f
-Download_firmwares	Download_Firmware_Updates.c	/^int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Update_count],char *FirmwareName)$/;"	f
-Firm_Apps_Download_lock	main.c	/^int Firm_Apps_Download_lock()$/;"	f
-Firmware_Request_and_Response	Firmware_request.c	/^int Firmware_Request_and_Response() $/;"	f
-Firmware_Update	Install_Updates.sh	/^Firmware_Update()$/;"	f
-Firmware_response_file	Firmware_request.c	/^char *Firmware_response_file="\/opt\/Firmware_response.xml";$/;"	v
-Firmware_updates	Download_Firmware_Updates.c	/^int Firmware_updates( int Total_Current_Server_Apps)$/;"	f
-Get_Device_Applications_Count	edit_version.c	/^int Get_Device_Applications_Count()$/;"	f
-Get_SerialID	Get_SerialID.c	/^int Get_SerialID(char *SerialID)$/;"	f
-Get_Server_Firmwares_Count	Download_Firmware_Updates.c	/^int Get_Server_Firmwares_Count()$/;"	f
-Get_Total_Device_Apps	Get_Total_Device_Apps.c	/^int Get_Total_Device_Apps()$/;"	f
-Get_Total_Downloaded_Updates	Delete_From_installation.c	/^int Get_Total_Downloaded_Updates(int type)$/;"	f
-Get_Total_Downloaded_Updates	Get_Total_Downloaded_Updates.c	/^int Get_Total_Downloaded_Updates(int type)$/;"	f
-Get_Total_Server_Apps	Download_Application_Updates.c	/^int Get_Total_Server_Apps()$/;"	f
-Get_Total_Server_Apps	copy_apps.c	/^int Get_Total_Server_Apps()$/;"	f
-Get_format_machineid	Get_SerialID.c	/^int Get_format_machineid(char *format_machineid)$/;"	f
-Install_Applications_file	Add_to_installation.c	/^char *Install_Applications_file="\/mnt\/sysuser\/Software-Upgrade\/Applications_Downloads\/Install_Applications.info";$/;"	v
-Install_Applications_file	Delete_From_installation.c	/^char *Install_Applications_file="\/mnt\/sysuser\/Software-Upgrade\/Applications_Downloads\/Install_Applications.info";$/;"	v
-Install_Firmwares_file	Add_to_installation.c	/^char *Install_Firmwares_file="\/mnt\/sysuser\/Software-Upgrade\/Firmware_Downloads\/Install_Firmwares.info";$/;"	v
-Install_Firmwares_file	Delete_From_installation.c	/^char *Install_Firmwares_file="\/mnt\/sysuser\/Software-Upgrade\/Firmware_Downloads\/Install_Firmwares.info";$/;"	v
-Is_Directory	Get_Total_Device_Apps.c	/^int Is_Directory(const char *file)$/;"	f
-Parse_Application_response_xml	firm_apps_response_parser.c	/^int Parse_Application_response_xml(void)$/;"	f
-Parse_Firmware_response_xml	firm_apps_response_parser.c	/^int Parse_Firmware_response_xml(void)$/;"	f
-Send_Update_singal_to_app	Send_Update_singal_to_app.c	/^void Send_Update_singal_to_app()$/;"	f
-SerialID	Get_SerialID.c	/^char SerialID[24];$/;"	v
-Server_Addr	Update_Configured_Server_Addr.c	/^char Server_Addr[512]="https:\/\/rhms2.callippus.co.uk";$/;"	v
-Server_Application_release_file	firm_apps_response_parser.c	/^char *Server_Application_release_file="\/etc\/vision\/RHMS\/Apps\/ServerApplicationsRelease.info";$/;"	v
-Server_Firmware_release_file	firm_apps_response_parser.c	/^char *Server_Firmware_release_file="\/etc\/vision\/RHMS\/Firmware\/ServerFirmwareRelease.info";$/;"	v
-Standard_Apps_path	Delete_From_installation.c	/^char *Standard_Apps_path="\/mnt\/sysuser\/Software-Upgrade\/Applications_Downloads\/";$/;"	v
-Standard_Firmwares_path	Delete_From_installation.c	/^char *Standard_Firmwares_path="\/mnt\/sysuser\/Software-Upgrade\/Firmware_Downloads\/";$/;"	v
-Update_Configured_Server_Addr	Update_Configured_Server_Addr.c	/^int  Update_Configured_Server_Addr()$/;"	f
-Update_Current_Date_with_Time	Add_to_installation.c	/^void Update_Current_Date_with_Time(char *Date_time)$/;"	f
-Update_buff	update_script.c	/^char *Update_buff="#!\/bin\/bash\\nExtracted_path=\/mnt\/sysuser\/Firmware-Upgrade\/Extract\/\\nupdate_path=\/mnt\/sysuser\/Firmware-Upgrade\/Extract\/patch\\nBootfile_Images_Path=$update_path\/boot_files\\nclear_uboot_files()\\n{\\nrm -rf $Bootfile_Images_Path\/u-boot.bin\\nrm -rf $Bootfile_Images_Path\/uboot.md5\\n}\\nclear_kernel_files()\\n{\\nrm -rf $Bootfile_Images_Path\/kernel.IMG\\nrm -rf $Bootfile_Images_Path\/kernel.md5\\n}\\nkernel_loading()\\n{\\ncd $Bootfile_Images_Path\/\\nmd5sum -c kernel.md5\\nretval=$?\\nif [ $retval -ne 0 ] \\nthen\\necho \\"Error:1 Kernel File Corrupted\\"\\necho \\"\\"\\ncd\\nclear_kernel_files\\nreturn 1\\nfi\\nif [ -f $Bootfile_Images_Path\/kernel.IMG ]\\nthen\\n\\necho \\"Loading  GL11 iMX6  Kenel Image\\" \\ndd if=$Bootfile_Images_Path\/kernel.IMG of=\/dev\/mmcblk0 bs=1M seek=1 conv=fsync\\necho \\"Kernel Loaded Successfully\\"\\nreturn 0\\nelse\\necho \\"Error 2:Kernel File Not Found\\"\\necho \\"\\"\\nreturn 2\\nfi\\n}\\nuboot_loading()\\n{\\ncd $Bootfile_Images_Path\\nmd5sum -c uboot.md5\\nretval=$?\\nif [ $retval -ne 0 ]\\nthen\\necho \\"Error:1 Uboot File Corrupted\\"\\necho \\"\\"\\ncd\\nclear_uboot_files\\nreturn  1\\nfi\\nif [ -f $Bootfile_Images_Path\/u-boot.bin  ]\\nthen\\necho \\"Loading GL11 iMX6 U-Boot Image\\"\\necho 8 > \/sys\/devices\/platform\/sdhci-esdhc-imx.1\/mmc_host\/mmc1\/mmc1:0001\/boot_config\\ndd if=\/dev\/zero of=\/dev\/mmcblk0 bs=512 seek=1536 count=8\\necho 0 > \/sys\/block\/mmcblk0boot0\/force_ro\\ndd if=$Bootfile_Images_Path\/u-boot.bin of=\/dev\/mmcblk0boot0 bs=512 seek=2 skip=2\\necho 1 > \/sys\/block\/mmcblk0boot0\/force_ro\\necho 8 > \/sys\/devices\/platform\/sdhci-esdhc-imx.1\/mmc_host\/mmc1\/mmc1:0001\/boot_config\\necho \\"U-Boot Loaded Successfully\\"\\nreturn 0\\nelse\\necho \\"Error :2UBoot File Not Found\\"\\necho \\"\\"\\nreturn  2\\nfi\\n}\\n\\nupdate_etc_visiontek_release()\\n{\\nUpdated_Version=$(cat \/root\/.Firmware_version)\\nDate=$(date +%d%m%Y-%H:%M)\\nmd5sum=$(cut \/mnt\/sysuser\/Firmware-Upgrade\/Extract\/patch.md5 -d ' ' -f1)\\necho \\"PATCH_VERSION=$Updated_Version\\nPATCH_DATE=$Date\\nPATCH_MD5SUM=$md5sum\\" > \/etc\/visiontek_release\\necho \\"$Updated_Version Firmware Patch updated successfully...\\"\\n}\\nif [ ! -d $update_path ]\\nthen\\necho \\"$update_path Directory not found\\" \\nexit 1\\nfi\\nchmod 777 -R  $update_path\/ \\nif [ -e $Bootfile_Images_Path\/u-boot.bin ]  && [ -e $Bootfile_Images_Path\/uboot.md5 ]\\nthen\\necho \\"---------------UBoot Files Found ------------------\\"\\nuboot_loading\\nret=$?\\nif [ $ret -eq 0 ]\\nthen\\nclear_uboot_files\\nfi\\nsleep 3\\nsync\\nelse\\necho \\"---------------UBoot Files Not found-----------\\"\\nfi\\nif [ -e $Bootfile_Images_Path\/kernel.IMG ]  &&  [  -e $Bootfile_Images_Path\/kernel.md5 ]\\nthen\\necho \\"--------------Kernel Files Found------------------\\"       \\nsleep 3\\nkernel_loading\\nret=$?\\nif [ $ret -eq 0 ]\\nthen\\nclear_kernel_files\\nfi\\nsleep 3\\nsync\\nelse\\necho \\"------------------Kernel Files Not found----------\\"       \\nfi\\nif [ -e $update_path\/tmp\/start_fw.sh ]\\nthen\\necho \\"Running Pre Management Work For patch \\"\\nsh $update_path\/tmp\/start_fw.sh \\nsleep 1\\nfi\\n\\n`yes | cp -r $update_path\/*   \/`\\n\\nupdate_etc_visiontek_release \\n\\nif [ -e $update_path\/tmp\/end_fw.sh ]\\nthen\\necho \\"Post Managemnt Work For Patch \\"\\nsh $update_path\/tmp\/end_fw.sh \\nfi\\nrm -rf $Extracted_path\\nexit 0\\n#VISIONTEK#\\n";$/;"	v
-Wait_for_internet	Wait_for_internet.c	/^void Wait_for_internet(void)$/;"	f
+Check_internet_by_hostname	Wait_for_internet.c	/^int Check_internet_by_hostname(char *host)$/;"	f	typeref:typename:int
+Create_Application_DownloadCompleted_file	DownloadCompleted.c	/^void Create_Application_DownloadCompleted_file(char *path,float Version)$/;"	f	typeref:typename:void
+Create_Firmware_DownloadCompleted_file	DownloadCompleted.c	/^void Create_Firmware_DownloadCompleted_file(char *path,float Version)$/;"	f	typeref:typename:void
+Device_App_info_Details	Device_App_info_Details.c	/^int Device_App_info_Details(char *Device_Application_release_file,char *DeviceApplicationType,ch/;"	f	typeref:typename:int
+Device_Firmware_release_file	Download_Firmware_Updates.c	/^char *Device_Firmware_release_file="\/etc\/vision\/RHMS\/Firmware\/FirmwareUpdated.info";$/;"	v	typeref:typename:char *
+Download_Application_Updates	Download_Application_Updates.c	/^int Download_Application_Updates(void)$/;"	f	typeref:typename:int
+Download_Firmware_Updates	Download_Firmware_Updates.c	/^int Download_Firmware_Updates(void)$/;"	f	typeref:typename:int
+Download_Update	Download_Update.c	/^int Download_Update(char *URL, char *Filename_with_Download_Location)$/;"	f	typeref:typename:int
+Download_applications	Download_Application_Updates.c	/^int Download_applications(int Update_count,struct RHMSApplication DownloadApplication[Update_cou/;"	f	typeref:typename:int
+Download_firmwares	Download_Firmware_Updates.c	/^int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Update_count],char /;"	f	typeref:typename:int
+Downloader_FirmwareAndApps	makefile	/^Downloader_FirmwareAndApps:main.c Application_request.c  firm_apps_response_parser.c  Firmware_r/;"	t
+Firm_Apps_Download_lock	main.c	/^int Firm_Apps_Download_lock()$/;"	f	typeref:typename:int
+Firmware_Request_and_Response	Firmware_request.c	/^int Firmware_Request_and_Response() $/;"	f	typeref:typename:int
+Firmware_response_file	Firmware_request.c	/^char *Firmware_response_file="\/opt\/Firmware_response.xml";$/;"	v	typeref:typename:char *
+Firmware_updates	Download_Firmware_Updates.c	/^int Firmware_updates( int Total_Current_Server_Firmwares)$/;"	f	typeref:typename:int
+Get_SerialID	Get_SerialID.c	/^int Get_SerialID(char *SerialID)$/;"	f	typeref:typename:int
+Get_Server_Firmwares_Count	Download_Firmware_Updates.c	/^int Get_Server_Firmwares_Count()$/;"	f	typeref:typename:int
+Get_Total_Downloaded_Updates	Get_Total_Downloaded_Updates.c	/^int Get_Total_Downloaded_Updates(int type)$/;"	f	typeref:typename:int
+Get_Total_Server_Apps	Download_Application_Updates.c	/^int Get_Total_Server_Apps()$/;"	f	typeref:typename:int
+Get_format_machineid	Get_SerialID.c	/^int Get_format_machineid(char *format_machineid)$/;"	f	typeref:typename:int
+Install_Applications_file	Add_to_installation.c	/^char *Install_Applications_file="\/mnt\/sysuser\/Software-Upgrade\/Applications_Downloads\/Insta/;"	v	typeref:typename:char *
+Install_Firmwares_file	Add_to_installation.c	/^char *Install_Firmwares_file="\/mnt\/sysuser\/Software-Upgrade\/Firmware_Downloads\/Install_Firm/;"	v	typeref:typename:char *
+Parse_Application_response_xml	firm_apps_response_parser.c	/^int Parse_Application_response_xml(void)$/;"	f	typeref:typename:int
+Parse_Firmware_response_xml	firm_apps_response_parser.c	/^int Parse_Firmware_response_xml(void)$/;"	f	typeref:typename:int
+SerialID	Get_SerialID.c	/^char SerialID[24];$/;"	v	typeref:typename:char[24]
+Server_Addr	Update_Configured_Server_Addr.c	/^char Server_Addr[512]="https:\/\/rhms2.callippus.co.uk";$/;"	v	typeref:typename:char[512]
+Server_Application_release_file	firm_apps_response_parser.c	/^char *Server_Application_release_file="\/etc\/vision\/RHMS\/Apps\/ServerApplicationsRelease.info/;"	v	typeref:typename:char *
+Server_Firmware_release_file	firm_apps_response_parser.c	/^char *Server_Firmware_release_file="\/etc\/vision\/RHMS\/Firmware\/ServerFirmwareRelease.info";$/;"	v	typeref:typename:char *
+UC	Get_SerialID.c	/^	typedef unsigned char UC;$/;"	t	function:get_macid	typeref:typename:unsigned char	file:
+Update_Configured_Server_Addr	Update_Configured_Server_Addr.c	/^int  Update_Configured_Server_Addr()$/;"	f	typeref:typename:int
+Update_Current_Date_with_Time	Add_to_installation.c	/^void Update_Current_Date_with_Time(char *Date_time)$/;"	f	typeref:typename:void
+Wait_for_internet	Wait_for_internet.c	/^void Wait_for_internet(void)$/;"	f	typeref:typename:void
 bin_strip	makefile	/^bin_strip=arm-none-linux-gnueabi-strip$/;"	m
-check_Download_complete	Add_to_installation.c	/^int check_Download_complete(char *patch,int type)$/;"	f
-get_macid	Get_SerialID.c	/^int get_macid(char *macid)$/;"	f
-kernel_loading	Install_Updates.sh	/^kernel_loading()$/;"	f
+check_Download_complete	Add_to_installation.c	/^int check_Download_complete(char *patch,int type)$/;"	f	typeref:typename:int
+clean	makefile	/^clean:$/;"	t
+get_macid	Get_SerialID.c	/^int get_macid(char *macid)$/;"	f	typeref:typename:int
 libs	makefile	/^libs=-L ..\/lib -lxml2 -lz$/;"	m
-main	Delete_From_installation.c	/^int main()$/;"	f
-main	edit_version.c	/^int main()$/;"	f
-main	main.c	/^int main()$/;"	f
-main	update_script.c	/^int main()$/;"	f
-parseStory	firm_apps_response_parser.c	/^int parseStory (xmlDocPtr doc, xmlNodePtr cur,char *output_file)$/;"	f
-retrieve_nw_details	Wait_for_internet.c	/^static int retrieve_nw_details(void)$/;"	f	file:
-uboot_loading	Install_Updates.sh	/^uboot_loading()$/;"	f
-update_etc_visiontek_Firmware_release	Install_Updates.sh	/^update_etc_visiontek_Firmware_release()$/;"	f
+main	main.c	/^int main()$/;"	f	typeref:typename:int
+parseStory	firm_apps_response_parser.c	/^int parseStory (xmlDocPtr doc, xmlNodePtr cur,char *output_file)$/;"	f	typeref:typename:int
+retrieve_nw_details	Wait_for_internet.c	/^static int retrieve_nw_details(void)$/;"	f	typeref:typename:int	file:

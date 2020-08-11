@@ -43,10 +43,8 @@ int Download_applications(int Update_count,struct RHMSApplication DownloadApplic
 		if ( ret == 0 )
 		{
 			fprintf(stdout,"%s File Download Success\n",FileName_with_path);
-			ret = Add_to_installation(path,FileName_with_path,APPLICATION); // 2 arg Application Type
-			if ( ret == 0 )
-				Create_Application_DownloadCompleted_file(path,DownloadApplication[i].Version);	       
-			else 
+			ret = Add_to_installation(DownloadApplication[i].Version,path,FileName_with_path,APPLICATION); // 2 arg Application Type
+			if ( ret != 0 )
 				fprintf(stderr,"Error, Failed to  Add to Installation in Application %s ",FileName_with_path);
 		}
 		else 

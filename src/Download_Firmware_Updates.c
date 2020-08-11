@@ -223,6 +223,7 @@ int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Upd
 	char FileName_with_path[320];
 	char path[310];
 	char cmd[320];
+	float Version=0.0;
 	int i,ret,start,end;
 	fprintf(stdout,"Firmware Update count %d \n",Update_count);
 	if ( Update_count == 1 )
@@ -251,11 +252,12 @@ int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Upd
 	for(i=start;i<=end;i++)  // 2 
 	{
 		memset(FileName_with_path,0,sizeof(FileName_with_path));
-
+		Version=0;
 		if ( i == Update_count )
 		{
 			fprintf(stdout,"Final Version Downloading \n");
 			sprintf(FileName_with_path,"%s/firmware-%.1f.zip",path,DownloadFirmware[0].Version);
+			Version = DownloadFirmware[0].Version;
 			ret = check_Download_complete(FileName_with_path,FIRMWARE);	
 			if ( ret == 0 )
 			{
@@ -268,6 +270,7 @@ int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Upd
 		else 
 		{
 			sprintf(FileName_with_path,"%s/firmware-%.1f.zip",path,DownloadFirmware[i].Version);
+			Version = DownloadFirmware[i].Version;
 			ret = check_Download_complete(FileName_with_path,FIRMWARE);	
 			if ( ret == 0 )
 			{
@@ -280,13 +283,12 @@ int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Upd
 		if ( ret == 0 )
 		{
 			fprintf(stdout,"%s File Download Success\n",FileName_with_path);
-			ret = Add_to_installation(path,FileName_with_path,FIRMWARE);
-			if ( ret == 0 )
-				Create_Firmware_DownloadCompleted_file(path,DownloadFirmware[i].Version);	
-			else 
+			ret = Add_to_installation(Version,path,FileName_with_path,FIRMWARE);
+			if ( ret != 0 )
 			{
 				fprintf(stderr,"Error, Failed to  Add to Installation in Firmware %s ",FileName_with_path);
-				fprintf(stdout,"Dependencies must and Should Download and Install sequencial way, So skipping remaining Downloads\n"); 
+				if ( Update_count  > 1)
+					fprintf(stdout,"Dependencies must and Should Download and Install sequencial way, So skipping remaining Downloads\n"); 
 				return -1;
 			}
 		}

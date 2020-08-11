@@ -1,20 +1,27 @@
 #include<header.h>
 char *Install_Applications_file="/mnt/sysuser/Software-Upgrade/Applications_Downloads/Install_Applications.info";
 char *Install_Firmwares_file="/mnt/sysuser/Software-Upgrade/Firmware_Downloads/Install_Firmwares.info";
-int Add_to_installation(char *path,char *patch,int type)
+int Add_to_installation(float Version,char *path,char *patch,int type)
 {
 	FILE *fp=NULL;
 	char filename[128];
 	char Date_time[64];
-	char Download_complete_file[330];
+	char DownloadCompleteFile[460];
 	int ret;
 	memset(filename,0,sizeof(memset));
 	memset(Date_time,0,sizeof(Date_time));
-	memset(Download_complete_file,0,sizeof(Download_complete_file));
+	memset(DownloadCompleteFile,0,sizeof(DownloadCompleteFile));
 	if ( type == FIRMWARE )
+	{
 		strcpy(filename,Install_Firmwares_file);	
+		sprintf(DownloadCompleteFile,"%s/%.1f_DownloadCompleted",path,Version);
+	}
 	else if ( type == APPLICATION )
+	{
+		sprintf(DownloadCompleteFile,"%s/DownloadCompleted",path); 
 		strcpy(filename,Install_Applications_file);
+
+	}
 	else 
 	{
 		fprintf(stdout,"Unknown type\n");
@@ -34,12 +41,29 @@ int Add_to_installation(char *path,char *patch,int type)
 	}
 	Update_Current_Date_with_Time(Date_time);
 
-	sprintf(Download_complete_file,"%s/.DownloadCompletedHistory",path);
+	fp = fopen(DownloadCompleteFile,"w");
+	if ( fp == NULL)
+	{
+		fprintf(stderr,"%s Write Error \n",DownloadCompleteFile);
+		return -1;
+	}
+	fprintf(stdout,"%s created Successfully\n",DownloadCompleteFile);
 
-	fp = fopen(Download_complete_file,"a");
+	fprintf(fp,"Version:%.1f\nDownloaded_DateAndTime=%s\n",Version,Date_time);
+
+	fclose(fp);
+
+	fprintf(stdout,"Version:%.1f\nDownloaded_DateAndTime=%s\n",Version,Date_time);
+
+	
+	memset(DownloadCompleteFile,0,sizeof(DownloadCompleteFile));
+	
+	sprintf(DownloadCompleteFile,"%s/.DownloadCompletedHistory",path);
+
+	fp = fopen(DownloadCompleteFile,"a");
 	if ( fp == NULL )
 	{
-		fprintf(stderr," file not found %s\n",Download_complete_file);
+		fprintf(stderr," file not found %s\n",DownloadCompleteFile);
 		return -1;
 	}
 	else
@@ -47,6 +71,8 @@ int Add_to_installation(char *path,char *patch,int type)
 		fprintf(fp,"%s\n%s\n",patch,Date_time);
 		fclose(fp);
 	}
+
+
 
 	fp = fopen(filename,"a");
 	if ( fp == NULL )
@@ -62,22 +88,7 @@ int Add_to_installation(char *path,char *patch,int type)
 		fprintf(stdout,"Added to patch installation list\tReady for installation = %s\n",patch);
 	}
 
-	memset(Download_complete_file,0,sizeof(Download_complete_file));
-	
-	sprintf(Download_complete_file,"%s/.DownloadCompletedHistory",path);
 
-        fp = fopen(Download_complete_file,"a");
-        if ( fp == NULL )
-        {
-                fprintf(stderr," file not found %s\n",Download_complete_file);
-                return -1;
-        }
-        else
-        {
-                fprintf(fp,"%s\n%s\n",patch,Date_time);
-                fclose(fp);
-        }
-		
 	return 0;
 }
 int check_Download_complete(char *patch,int type)
@@ -130,7 +141,7 @@ int check_Download_complete(char *patch,int type)
 			return 1;
 		}
 	}
-	else fprintf(stdout,"No previous Download completion, patch = %s\n",patch);
+	else fprintf(stdout,"No previously Added, patch = %s\n",patch);
 
 	return -1;
 }

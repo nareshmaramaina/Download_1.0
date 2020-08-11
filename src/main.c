@@ -26,7 +26,7 @@ int main()
 	short int ret;
 	int Apps_Downloads=0,Firmware_Downloads =0;
 
-	fprintf(stdout,"\n*****************\nApp	: Firmware_and_Apps_Downloader\nVersion	: 1.0\n*****************\n");
+	fprintf(stdout,"\n*****************\nApp	: Downloader_FirmwareAndApps\nVersion	: 1.0\n*****************\n");
 
 	ret = Firm_Apps_Download_lock();
 
