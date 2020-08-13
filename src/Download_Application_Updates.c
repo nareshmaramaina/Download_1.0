@@ -223,7 +223,9 @@ int App_updates( int Total_Current_Server_Apps)
 			Update_count++;
 		}
 	}
-	Download_applications(Update_count,DownloadApplication);
+	if ( Update_count > 0 )
+		Download_applications(Update_count,DownloadApplication);
+	else fprintf(stdout," No Applications Update Found \n");
 
 	return Update_count;
 }

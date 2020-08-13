@@ -9,10 +9,10 @@ int Download_Firmware_Updates(void)
 	int Total_Current_Server_Firmwares=0;
 	Total_Current_Server_Firmwares = Get_Server_Firmwares_Count();
 	fprintf(stdout,"Total Current Firmware Server Firmwares = %d\n",Total_Current_Server_Firmwares);
-	if ( Total_Current_Server_Firmwares < 0)
+	if ( Total_Current_Server_Firmwares <= 0)
 		return -1;
-	Firmware_updates(Total_Current_Server_Firmwares);	
-	return 0;
+	else
+		return Firmware_updates(Total_Current_Server_Firmwares);	
 }
 
 int Firmware_updates( int Total_Current_Server_Firmwares)
@@ -186,7 +186,10 @@ int Firmware_updates( int Total_Current_Server_Firmwares)
 			}
 
 		}
-		Download_firmwares(Update_count,DownloadFirmware,ServerFirmwareName);
+		if( Update_count > 0 )
+			Download_firmwares(Update_count,DownloadFirmware,ServerFirmwareName);
+		else 
+			fprintf(stdout,"No Firmware Updates Found\n");
 	}
 
 	else 
