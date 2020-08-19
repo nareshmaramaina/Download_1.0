@@ -3,7 +3,7 @@ char Server_Addr[512]="https://rhms2.callippus.co.uk";
 int  Update_Configured_Server_Addr()
 {
 	FILE *fp;
-	size_t len=0;
+	size_t len=0,sizeofBuffer;
 	char *str=NULL; 
 
 
@@ -20,6 +20,13 @@ int  Update_Configured_Server_Addr()
 	{
 		if  (strstr(str,"ServerAddress:") != NULL )
 		{
+			sizeofBuffer = sizeof(Server_Addr); 
+			if( strlen(str+14) > sizeofBuffer ) 
+			{
+				fprintf(stderr,"Invalid: Server_Addr Length More than %d bytes \n",sizeofBuffer);
+				continue;
+			}
+			else fprintf(stdout,"Dont Know %d %d\n",sizeofBuffer,strlen(str+14));
 			fprintf(stdout," Updated Configured Server Address\n");
 			strcpy(Server_Addr,str+14);
 			break;

@@ -42,18 +42,25 @@ int Get_format_machineid(char *format_machineid)
 
 	FILE *fp=NULL;
 
-	char machineid[15]="";
+	char machineid[24]="";
+ 	char Buffer[64]="";
 
 
 	for ( i=0; i< 5;i++)
 	{
-		ret = system("fw_printenv  machineid | cut -d '=' -f2 > /tmp/.machineid");
+		ret = system("fw_printenv  machineid  > /tmp/.machineid");
 
 		if ( ret == 0)
 			break;
 
 		sleep(1);
 	}
+	if ( ret != 0 )
+	{
+		fprintf(stderr,"Machine ID not Found \n");
+		return ret;
+	}
+
 
 	fp = fopen("/tmp/.machineid", "r");
 
@@ -64,19 +71,23 @@ int Get_format_machineid(char *format_machineid)
 		return -1;
 
 	}
-
-	fscanf(fp,"%s",machineid);
-
+	fread(Buffer,sizeof(Buffer),1,fp);
 	fclose(fp);
 
+
 	remove("/tmp/.machineid");
+
+
+	strcpy(machineid,Buffer+10);
+	
+	if( machineid[strlen(machineid)-1] == '\n')
+		machineid[strlen(machineid)-1] = '\0';
 
 	if (  strlen(machineid) != 10 )
 	{
 		fprintf(stderr,"Error: machineid not 10 digits, %s\n",machineid);
 		return -1;
 	}
-
 	if(machineid[0]=='1' && machineid[1]=='1')
 		sprintf(format_machineid,"1%s",machineid);
 

@@ -17,12 +17,24 @@ int Device_App_info_Details(char *Device_Application_release_file,char *DeviceAp
 		{
 			if((str = (char *)strstr(line,"ApplicationType:")) != NULL)
 			{
+				if( strlen(str+16) > 128 )
+				{
+					fprintf(stderr,"Invalid: DeviceApplicationType Length More than 128 bytes \n");
+					continue;
+				}
+
 				strcpy(DeviceApplicationType,str+16);
 				if(DeviceApplicationType[ strlen(DeviceApplicationType) -1 ] == '\n')
 					DeviceApplicationType[ strlen(DeviceApplicationType) - 1 ]='\0';
 			}
 			else if((str = (char *)strstr(line,"ApplicationName:")) != NULL)
 			{
+				if( strlen(str+16) > 128 )
+				{
+					fprintf(stderr,"Invalid: DeviceApplicationName Length More than 128 bytes \n");
+					continue;
+				}
+
 				strcpy(DeviceApplicationName,str+16);
 				if(DeviceApplicationName[strlen(DeviceApplicationName)-1] == '\n')
 					DeviceApplicationName[strlen(DeviceApplicationName)-1]='\0';

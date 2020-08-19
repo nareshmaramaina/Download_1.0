@@ -25,7 +25,7 @@ int Firmware_updates( int Total_Current_Server_Firmwares)
 	FILE *fp = NULL;
 	char *line=NULL,*str=NULL;
 	int Update_count,F_check=0;
-	size_t len=0;
+	size_t len=0,sizeofBuffer=0;
 	int i,check=0, ret ,  Total_Server_Firmwares=0;
 	memset(ServerFirmware,0,sizeof(ServerFirmware));
 	memset(DownloadFirmware,0,sizeof(DownloadFirmware));
@@ -42,6 +42,13 @@ int Firmware_updates( int Total_Current_Server_Firmwares)
 		{
 			if ( F_check == 0 )
 			{
+				sizeofBuffer = sizeof(ServerFirmwareName);
+                                if( strlen(str+13) > sizeofBuffer )
+                                {
+                                        fprintf(stderr,"Invalid: ServerFirmwareName Length More than %d bytes \n",sizeofBuffer);
+                                        continue;
+                                }
+
 				strcpy(ServerFirmwareName,str+13);
 				if(ServerFirmwareName[strlen(ServerFirmwareName)-1] == '\n')
 					ServerFirmwareName[strlen(ServerFirmwareName)-1]='\0';
@@ -73,6 +80,13 @@ int Firmware_updates( int Total_Current_Server_Firmwares)
 		{
 			if( check == 1  )
 			{
+				sizeofBuffer = sizeof(ServerFirmware[i].URL);
+                                if( strlen(str+16) > sizeofBuffer )
+                                {
+                                        fprintf(stderr,"Invalid: ServerFirmware[%d].URL Length More than %d bytes \n",i,sizeofBuffer);
+                                        continue;
+                                }
+
 				strcpy(ServerFirmware[i].URL,str+12);
 				if(ServerFirmware[i].URL[strlen(ServerFirmware[i].URL)-1] == '\n')
 					ServerFirmware[i].URL[strlen(ServerFirmware[i].URL)-1]='\0';
@@ -117,6 +131,13 @@ int Firmware_updates( int Total_Current_Server_Firmwares)
 		{
 			if((str = (char *)strstr(line,"FirmwareName:")) != NULL)
 			{
+				sizeofBuffer = sizeof(DeviceFirmwareName);
+                                if( strlen(str+13) > sizeofBuffer )
+                                {
+                                        fprintf(stderr,"Invalid: DeviceFirmwareName Length More than %d bytes \n",sizeofBuffer);
+                                        continue;
+                                }
+
 				memset(DeviceFirmwareName,0,sizeof(DeviceFirmwareName));
 				strcpy(DeviceFirmwareName,str+13);
 				if(DeviceFirmwareName[strlen(DeviceFirmwareName)-1] == '\n')

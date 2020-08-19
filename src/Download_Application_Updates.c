@@ -66,7 +66,7 @@ int App_updates( int Total_Current_Server_Apps)
 	FILE *fp = NULL;
 	char *line=NULL,*str=NULL;
 	int Update_count,Update_flag,Device_App_Wrong;
-	size_t len=20;
+	size_t len=20,sizeofBuffer=0;
 	int ret, i,j,check=0,  Total_Server_Apps=0;
 	memset(ServerApplication,0,sizeof(ServerApplication));
 	memset(DownloadApplication,0,sizeof(DownloadApplication));
@@ -83,6 +83,13 @@ int App_updates( int Total_Current_Server_Apps)
 		{
 			if( check == 0 || check == 2 || check == 4 )
 			{
+				sizeofBuffer = sizeof(ServerApplication[i].Type);
+                                if( strlen(str+16) > sizeofBuffer )
+                                {
+                                        fprintf(stderr,"Invalid: ServerApplication[%d].Type Length More than %d bytes \n",i,sizeofBuffer);
+                                        continue;
+                                }
+
 
 				strcpy(ServerApplication[i].Type,str+16);
 				if(ServerApplication[i].Type[ strlen(ServerApplication[i].Type) -1 ] == '\n')
@@ -100,6 +107,13 @@ int App_updates( int Total_Current_Server_Apps)
 		{
 			if ( check == 1 )
 			{
+				sizeofBuffer = sizeof(ServerApplication[j].Name);
+                                if( strlen(str+16) > sizeofBuffer )
+                                {
+                                        fprintf(stderr,"Invalid: ServerApplication[%d].Name Length More than %d bytes \n",j,sizeofBuffer);
+                                        continue;
+                                }
+
 				strcpy(ServerApplication[j].Name,str+16);
 				if(ServerApplication[j].Name[strlen(ServerApplication[j].Name)-1] == '\n')
 					ServerApplication[j].Name[strlen(ServerApplication[j].Name)-1]='\0';
@@ -132,6 +146,13 @@ int App_updates( int Total_Current_Server_Apps)
 		{
 			if( check == 3  && i == j )
 			{
+				sizeofBuffer = sizeof(ServerApplication[j-1].URL);
+                                if( strlen(str+15) > sizeofBuffer )
+                                {
+                                        fprintf(stderr,"Invalid: ServerApplication[%d].URL Length More than %d bytes \n",j-1,sizeofBuffer);
+                                        continue;
+                                }
+
 				strcpy(ServerApplication[j-1].URL,str+15);
 				if(ServerApplication[j-1].URL[strlen(ServerApplication[j-1].URL)-1] == '\n')
 					ServerApplication[j-1].URL[strlen(ServerApplication[j-1].URL)-1]='\0';
