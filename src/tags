@@ -1,53 +1,50 @@
 !_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
 !_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
-!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
-!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
-!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
-!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
-!_TAG_PROGRAM_VERSION	0.0.0	//
-Add_to_installation	Add_to_installation.c	/^int Add_to_installation(char *path,char *patch,int type)$/;"	f	typeref:typename:int
-App_updates	Download_Application_Updates.c	/^int App_updates( int Total_Current_Server_Apps)$/;"	f	typeref:typename:int
-Application_response_file	Application_request.c	/^char *Application_response_file="\/opt\/Application_response.xml";$/;"	v	typeref:typename:char *
-Applications_Request_and_Response	Application_request.c	/^int Applications_Request_and_Response() $/;"	f	typeref:typename:int
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Add_to_installation	Add_to_installation.c	/^int Add_to_installation(float Version,char *path,char *patch,int type)$/;"	f
+App_updates	Download_Application_Updates.c	/^int App_updates( int Total_Current_Server_Apps)$/;"	f
+Application_response_file	Application_request.c	/^char *Application_response_file="\/opt\/Application_response.xml";$/;"	v
+Applications_Request_and_Response	Application_request.c	/^int Applications_Request_and_Response() $/;"	f
 CC	makefile	/^CC= arm-none-linux-gnueabi-gcc -Wall $/;"	m
 CFLAGS	makefile	/^CFLAGS=-Wall  -I ..\/include$/;"	m
-Check_internet_by_hostname	Wait_for_internet.c	/^int Check_internet_by_hostname(char *host)$/;"	f	typeref:typename:int
-Create_Application_DownloadCompleted_file	DownloadCompleted.c	/^void Create_Application_DownloadCompleted_file(char *path,float Version)$/;"	f	typeref:typename:void
-Create_Firmware_DownloadCompleted_file	DownloadCompleted.c	/^void Create_Firmware_DownloadCompleted_file(char *path,float Version)$/;"	f	typeref:typename:void
-Device_App_info_Details	Device_App_info_Details.c	/^int Device_App_info_Details(char *Device_Application_release_file,char *DeviceApplicationType,ch/;"	f	typeref:typename:int
-Device_Firmware_release_file	Download_Firmware_Updates.c	/^char *Device_Firmware_release_file="\/etc\/vision\/RHMS\/Firmware\/FirmwareUpdated.info";$/;"	v	typeref:typename:char *
-Download_Application_Updates	Download_Application_Updates.c	/^int Download_Application_Updates(void)$/;"	f	typeref:typename:int
-Download_Firmware_Updates	Download_Firmware_Updates.c	/^int Download_Firmware_Updates(void)$/;"	f	typeref:typename:int
-Download_Update	Download_Update.c	/^int Download_Update(char *URL, char *Filename_with_Download_Location)$/;"	f	typeref:typename:int
-Download_applications	Download_Application_Updates.c	/^int Download_applications(int Update_count,struct RHMSApplication DownloadApplication[Update_cou/;"	f	typeref:typename:int
-Download_firmwares	Download_Firmware_Updates.c	/^int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Update_count],char /;"	f	typeref:typename:int
-Downloader_FirmwareAndApps	makefile	/^Downloader_FirmwareAndApps:main.c Application_request.c  firm_apps_response_parser.c  Firmware_r/;"	t
-Firm_Apps_Download_lock	main.c	/^int Firm_Apps_Download_lock()$/;"	f	typeref:typename:int
-Firmware_Request_and_Response	Firmware_request.c	/^int Firmware_Request_and_Response() $/;"	f	typeref:typename:int
-Firmware_response_file	Firmware_request.c	/^char *Firmware_response_file="\/opt\/Firmware_response.xml";$/;"	v	typeref:typename:char *
-Firmware_updates	Download_Firmware_Updates.c	/^int Firmware_updates( int Total_Current_Server_Firmwares)$/;"	f	typeref:typename:int
-Get_SerialID	Get_SerialID.c	/^int Get_SerialID(char *SerialID)$/;"	f	typeref:typename:int
-Get_Server_Firmwares_Count	Download_Firmware_Updates.c	/^int Get_Server_Firmwares_Count()$/;"	f	typeref:typename:int
-Get_Total_Downloaded_Updates	Get_Total_Downloaded_Updates.c	/^int Get_Total_Downloaded_Updates(int type)$/;"	f	typeref:typename:int
-Get_Total_Server_Apps	Download_Application_Updates.c	/^int Get_Total_Server_Apps()$/;"	f	typeref:typename:int
-Get_format_machineid	Get_SerialID.c	/^int Get_format_machineid(char *format_machineid)$/;"	f	typeref:typename:int
-Install_Applications_file	Add_to_installation.c	/^char *Install_Applications_file="\/mnt\/sysuser\/Software-Upgrade\/Applications_Downloads\/Insta/;"	v	typeref:typename:char *
-Install_Firmwares_file	Add_to_installation.c	/^char *Install_Firmwares_file="\/mnt\/sysuser\/Software-Upgrade\/Firmware_Downloads\/Install_Firm/;"	v	typeref:typename:char *
-Parse_Application_response_xml	firm_apps_response_parser.c	/^int Parse_Application_response_xml(void)$/;"	f	typeref:typename:int
-Parse_Firmware_response_xml	firm_apps_response_parser.c	/^int Parse_Firmware_response_xml(void)$/;"	f	typeref:typename:int
-SerialID	Get_SerialID.c	/^char SerialID[24];$/;"	v	typeref:typename:char[24]
-Server_Addr	Update_Configured_Server_Addr.c	/^char Server_Addr[512]="https:\/\/rhms2.callippus.co.uk";$/;"	v	typeref:typename:char[512]
-Server_Application_release_file	firm_apps_response_parser.c	/^char *Server_Application_release_file="\/etc\/vision\/RHMS\/Apps\/ServerApplicationsRelease.info/;"	v	typeref:typename:char *
-Server_Firmware_release_file	firm_apps_response_parser.c	/^char *Server_Firmware_release_file="\/etc\/vision\/RHMS\/Firmware\/ServerFirmwareRelease.info";$/;"	v	typeref:typename:char *
-UC	Get_SerialID.c	/^	typedef unsigned char UC;$/;"	t	function:get_macid	typeref:typename:unsigned char	file:
-Update_Configured_Server_Addr	Update_Configured_Server_Addr.c	/^int  Update_Configured_Server_Addr()$/;"	f	typeref:typename:int
-Update_Current_Date_with_Time	Add_to_installation.c	/^void Update_Current_Date_with_Time(char *Date_time)$/;"	f	typeref:typename:void
-Wait_for_internet	Wait_for_internet.c	/^void Wait_for_internet(void)$/;"	f	typeref:typename:void
+Check_Address_Error_and_Update_Server_Addr_If_Error_Present	Firmware_request.c	/^int Check_Address_Error_and_Update_Server_Addr_If_Error_Present()$/;"	f
+Check_internet_by_hostname	Wait_for_internet.c	/^int Check_internet_by_hostname(char *host)$/;"	f
+Default_RHMS_Server_Address	Update_Configured_Server_Addr.c	/^char *Default_RHMS_Server_Address="https:\/\/rhms2.callippus.co.uk";$/;"	v
+Device_App_info_Details	Device_App_info_Details.c	/^int Device_App_info_Details(char *Device_Application_release_file,char *DeviceApplicationType,char *DeviceApplicationName,float *DeviceApplicationVersion )$/;"	f
+Device_Firmware_release_file	Download_Firmware_Updates.c	/^char *Device_Firmware_release_file="\/etc\/vision\/RHMS\/Firmware\/FirmwareUpdated.info";$/;"	v
+Download_Application_Updates	Download_Application_Updates.c	/^int Download_Application_Updates(void)$/;"	f
+Download_Firmware_Updates	Download_Firmware_Updates.c	/^int Download_Firmware_Updates(void)$/;"	f
+Download_Update	Download_Update.c	/^int Download_Update(char *URL, char *Filename_with_Download_Location)$/;"	f
+Download_applications	Download_Application_Updates.c	/^int Download_applications(int Update_count,struct RHMSApplication DownloadApplication[Update_count])$/;"	f
+Download_firmwares	Download_Firmware_Updates.c	/^int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Update_count],char *FirmwareName)$/;"	f
+Error_log_filename	Firmware_request.c	/^char *Error_log_filename="\/opt\/.DownloaderError.log";$/;"	v
+Firm_Apps_Download_lock	main.c	/^int Firm_Apps_Download_lock()$/;"	f
+Firmware_Request_and_Response	Firmware_request.c	/^int Firmware_Request_and_Response() $/;"	f
+Firmware_response_file	Firmware_request.c	/^char *Firmware_response_file="\/opt\/Firmware_response.xml";$/;"	v
+Firmware_updates	Download_Firmware_Updates.c	/^int Firmware_updates( int Total_Current_Server_Firmwares)$/;"	f
+Get_SerialID	Get_SerialID.c	/^int Get_SerialID(char *SerialID)$/;"	f
+Get_Server_Firmwares_Count	Download_Firmware_Updates.c	/^int Get_Server_Firmwares_Count()$/;"	f
+Get_Total_Downloaded_Updates	Get_Total_Downloaded_Updates.c	/^int Get_Total_Downloaded_Updates(int type)$/;"	f
+Get_Total_Server_Apps	Download_Application_Updates.c	/^int Get_Total_Server_Apps()$/;"	f
+Get_format_machineid	Get_SerialID.c	/^int Get_format_machineid(char *format_machineid)$/;"	f
+Install_Applications_file	Add_to_installation.c	/^char *Install_Applications_file="\/mnt\/sysuser\/Software-Upgrade\/Applications_Downloads\/Install_Applications.info";$/;"	v
+Install_Firmwares_file	Add_to_installation.c	/^char *Install_Firmwares_file="\/mnt\/sysuser\/Software-Upgrade\/Firmware_Downloads\/Install_Firmwares.info";$/;"	v
+Parse_Application_response_xml	firm_apps_response_parser.c	/^int Parse_Application_response_xml(void)$/;"	f
+Parse_Firmware_response_xml	firm_apps_response_parser.c	/^int Parse_Firmware_response_xml(void)$/;"	f
+SerialID	Get_SerialID.c	/^char SerialID[24];$/;"	v
+Server_Addr	Update_Configured_Server_Addr.c	/^char Server_Addr[512];$/;"	v
+Server_Application_release_file	firm_apps_response_parser.c	/^char *Server_Application_release_file="\/etc\/vision\/RHMS\/Apps\/ServerApplicationsRelease.info";$/;"	v
+Server_Firmware_release_file	firm_apps_response_parser.c	/^char *Server_Firmware_release_file="\/etc\/vision\/RHMS\/Firmware\/ServerFirmwareRelease.info";$/;"	v
+Update_Configured_Server_Addr	Update_Configured_Server_Addr.c	/^int  Update_Configured_Server_Addr()$/;"	f
+Update_Current_Date_with_Time	Add_to_installation.c	/^void Update_Current_Date_with_Time(char *Date_time)$/;"	f
+Wait_for_internet	Wait_for_internet.c	/^void Wait_for_internet(void)$/;"	f
 bin_strip	makefile	/^bin_strip=arm-none-linux-gnueabi-strip$/;"	m
-check_Download_complete	Add_to_installation.c	/^int check_Download_complete(char *patch,int type)$/;"	f	typeref:typename:int
-clean	makefile	/^clean:$/;"	t
-get_macid	Get_SerialID.c	/^int get_macid(char *macid)$/;"	f	typeref:typename:int
+check_Download_complete	Add_to_installation.c	/^int check_Download_complete(char *patch,int type)$/;"	f
+get_macid	Get_SerialID.c	/^int get_macid(char *macid)$/;"	f
 libs	makefile	/^libs=-L ..\/lib -lxml2 -lz$/;"	m
-main	main.c	/^int main()$/;"	f	typeref:typename:int
-parseStory	firm_apps_response_parser.c	/^int parseStory (xmlDocPtr doc, xmlNodePtr cur,char *output_file)$/;"	f	typeref:typename:int
-retrieve_nw_details	Wait_for_internet.c	/^static int retrieve_nw_details(void)$/;"	f	typeref:typename:int	file:
+main	main.c	/^int main()$/;"	f
+parseStory	firm_apps_response_parser.c	/^int parseStory (xmlDocPtr doc, xmlNodePtr cur,char *output_file)$/;"	f
+retrieve_nw_details	Wait_for_internet.c	/^static int retrieve_nw_details(void)$/;"	f	file:

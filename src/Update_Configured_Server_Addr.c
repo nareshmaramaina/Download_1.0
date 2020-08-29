@@ -1,7 +1,9 @@
 #include <header.h>
-char Server_Addr[512]="https://rhms2.callippus.co.uk";
+char *Default_RHMS_Server_Address="https://rhms2.callippus.co.uk";
+char Server_Addr[512];
 int  Update_Configured_Server_Addr()
 {
+	short int Index=0;
 	FILE *fp;
 	size_t len=0,sizeofBuffer;
 	char *str=NULL; 
@@ -11,6 +13,7 @@ int  Update_Configured_Server_Addr()
 
 	if (fp == NULL)
 	{
+		strcpy(Server_Addr,Default_RHMS_Server_Address);
 		fprintf(stderr," /etc/.RHMS_Server.config file not found, Proceeding with default address = %s\n",Server_Addr);
 		return -1;
 	}
@@ -26,7 +29,6 @@ int  Update_Configured_Server_Addr()
 				fprintf(stderr,"Invalid: Server_Addr Length More than %d bytes \n",sizeofBuffer);
 				continue;
 			}
-			else fprintf(stdout,"Dont Know %d %d\n",sizeofBuffer,strlen(str+14));
 			fprintf(stdout," Updated Configured Server Address\n");
 			strcpy(Server_Addr,str+14);
 			break;
@@ -42,8 +44,18 @@ int  Update_Configured_Server_Addr()
 	if ( strlen(Server_Addr) < 12 )
 	{
 		fprintf(stdout,"Invalid Configured server Address in  /etc/.RHMS_Server.config\n");
-		strcpy(Server_Addr,"https://rhms2.callippus.co.uk");
+		strcpy(Server_Addr,Default_RHMS_Server_Address);
 	}
+	for(Index=0;Server_Addr[Index];Index++)
+	{
+		if(Server_Addr[Index]==' '||Server_Addr[Index]=='\n'||Server_Addr[Index]=='\t')
+		{
+			fprintf(stdout,"Space/Tab/Newline Found in Server_Addr = %s\n",Server_Addr);
+			memmove(Server_Addr+Index,Server_Addr+Index+1,strlen(Server_Addr+Index+1)+1);
+			Index--;
+		}
+	}
+
 	fprintf(stdout," Server Address is %s\n", Server_Addr);
 	return 0;
 }

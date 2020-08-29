@@ -24,7 +24,7 @@ int Firm_Apps_Download_lock()
 int main()
 {
 	short int ret;
-	int Apps_Downloads=0,Firmware_Downloads =0;
+	int Apps_Downloads=0,Firmware_Downloads =0,run_time=0;
 
 	fprintf(stdout,"\n*****************\nApp	: Downloader_FirmwareAndApps\nVersion	: 1.0\n*****************\n");
 
@@ -47,14 +47,13 @@ int main()
 
 	while(1)
 	{
-			Firmware_Downloads = Get_Total_Downloaded_Updates(FIRMWARE);
-			if ( Firmware_Downloads > 0 )
+		Firmware_Downloads = Get_Total_Downloaded_Updates(FIRMWARE);
+		if ( Firmware_Downloads > 0 )
 			fprintf(stdout,"\n\033[1m\033[32m %d Firmware Downloads Completed, Reboot to Apply Patches ( Battery is Mandatory )\33[0m\n",Firmware_Downloads);
-			Apps_Downloads = Get_Total_Downloaded_Updates(APPLICATION);
-			if ( Apps_Downloads > 0 )
-		       	fprintf(stdout,"\n\033[1m\033[32m %d Application Downloads Completed, Reboot to Apply Patches ( Battery is Mandatory )\33[0m\n",Apps_Downloads);
+		Apps_Downloads = Get_Total_Downloaded_Updates(APPLICATION);
+		if ( Apps_Downloads > 0 )
+			fprintf(stdout,"\n\033[1m\033[32m %d Application Downloads Completed, Reboot to Apply Patches ( Battery is Mandatory )\33[0m\n",Apps_Downloads);
 
-		Wait_for_internet();
 
 		ret = Firmware_Request_and_Response(); 
 		if ( ret == -2 )
@@ -62,10 +61,6 @@ int main()
 			fprintf(stdout,"Please Do Register SerialID number in Suitable project, SerialID = %s\n", SerialID ); 
 			return ret;
 		}
-		else if ( ret == 0 )
-			fprintf(stdout,"Firmware Request  and Response done Successfully\n");
-		else 
-			fprintf(stderr,"Firmware Request Failure\n");
 
 		ret = Applications_Request_and_Response();
 		if ( ret == -2 )
@@ -73,17 +68,23 @@ int main()
 			fprintf(stdout,"Please Do Register SerialID number in Suitable project, SerialID = %s\n", SerialID ); 
 			return ret;
 		}
-		else if ( ret == 0 )
-			fprintf(stdout,"Applications Request and Response done Successfully\n");
-		else 
-			fprintf(stderr,"Applications Request Failure\n");
-
+		
 		Download_Firmware_Updates();			
 
 		Download_Application_Updates();
-		
-		fprintf(stdout,"Download sleep for 1 hr\n");
-		sleep(60*60*1); // Wait for 1 hours
+
+		run_time = is_RHMS_multiple_run();
+		if (  ( run_time % 60 == 0 ) && run_time < 3600  )
+		{
+			fprintf(stdout,"Downloader: Sleep for %d secs\n",run_time);
+			sleep(run_time);
+		}
+		else
+		{
+			fprintf(stdout,"Downloader: sleep for 1 hr\n");
+			sleep(3600);
+		}
+		fprintf(stdout,"Searching For New Apps/Firmware Download Updates\n");
 	}
 
 	return 0;

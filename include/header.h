@@ -91,4 +91,7 @@ int Get_Total_Downloaded_Updates(int type);
 int Device_App_info_Details(char *Device_Application_release_file,char *DeviceApplicationType,char *DeviceApplicationName,float *DeviceApplicationVersion );
 void Create_Firmware_DownloadCompleted_file(char *path,float Version);
 void Create_Application_DownloadCompleted_file(char *path,float Version);
-
+int Check_Address_Error_and_Update_Server_Addr_If_Error_Present();
+int Firmware_Request();
+int Applications_Request();
+int is_RHMS_multiple_run();
