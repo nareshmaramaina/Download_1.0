@@ -46,9 +46,6 @@ int Device_App_info_Details(char *Device_Application_release_file,char *DeviceAp
 				break;
 			}
 
-
-			else fprintf(stdout,"Line = %s \n",line);
-
 		}
 		free(line);
 		line=NULL;

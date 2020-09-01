@@ -12,7 +12,7 @@ int Download_Update(char *URL, char *Filename_with_Download_Location)
 
 	memset(Download_cmd,0x00,sizeof(Download_cmd));
 
-	sprintf(Download_cmd,"curl --cacert /vision/curl-ca-bundle.crt -C -  %s -o %s",URL,Filename_with_Download_Location);
+	sprintf(Download_cmd,"curl --cacert /vision/DeviceManagement/certs/curl-ca-bundle.crt -C -  %s -o %s",URL,Filename_with_Download_Location);
 
 	puts(Download_cmd);
 

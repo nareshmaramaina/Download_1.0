@@ -43,7 +43,7 @@ int Applications_Request()
 
 	memset(cmd,0,sizeof(cmd));
 
-	sprintf(cmd,"curl --cacert /vision/curl-ca-bundle.crt %s/api/ApplicationStatus?serialNo=%s 1> %s 2>%s",Server_Addr,SerialID,Application_response_file,Error_log_filename);
+	sprintf(cmd,"curl --cacert /vision/DeviceManagement/certs/curl-ca-bundle.crt %s/api/ApplicationStatus?serialNo=%s 1> %s 2>%s",Server_Addr,SerialID,Application_response_file,Error_log_filename);
 
 	system(cmd);
 

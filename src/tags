@@ -7,7 +7,8 @@
 Add_to_installation	Add_to_installation.c	/^int Add_to_installation(float Version,char *path,char *patch,int type)$/;"	f
 App_updates	Download_Application_Updates.c	/^int App_updates( int Total_Current_Server_Apps)$/;"	f
 Application_response_file	Application_request.c	/^char *Application_response_file="\/opt\/Application_response.xml";$/;"	v
-Applications_Request_and_Response	Application_request.c	/^int Applications_Request_and_Response() $/;"	f
+Applications_Request	Application_request.c	/^int Applications_Request()$/;"	f
+Applications_Request_and_Response	Application_request.c	/^int Applications_Request_and_Response()$/;"	f
 CC	makefile	/^CC= arm-none-linux-gnueabi-gcc -Wall $/;"	m
 CFLAGS	makefile	/^CFLAGS=-Wall  -I ..\/include$/;"	m
 Check_Address_Error_and_Update_Server_Addr_If_Error_Present	Firmware_request.c	/^int Check_Address_Error_and_Update_Server_Addr_If_Error_Present()$/;"	f
@@ -22,7 +23,8 @@ Download_applications	Download_Application_Updates.c	/^int Download_applications
 Download_firmwares	Download_Firmware_Updates.c	/^int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Update_count],char *FirmwareName)$/;"	f
 Error_log_filename	Firmware_request.c	/^char *Error_log_filename="\/opt\/.DownloaderError.log";$/;"	v
 Firm_Apps_Download_lock	main.c	/^int Firm_Apps_Download_lock()$/;"	f
-Firmware_Request_and_Response	Firmware_request.c	/^int Firmware_Request_and_Response() $/;"	f
+Firmware_Request	Firmware_request.c	/^int Firmware_Request() $/;"	f
+Firmware_Request_and_Response	Firmware_request.c	/^int Firmware_Request_and_Response()$/;"	f
 Firmware_response_file	Firmware_request.c	/^char *Firmware_response_file="\/opt\/Firmware_response.xml";$/;"	v
 Firmware_updates	Download_Firmware_Updates.c	/^int Firmware_updates( int Total_Current_Server_Firmwares)$/;"	f
 Get_SerialID	Get_SerialID.c	/^int Get_SerialID(char *SerialID)$/;"	f
@@ -44,6 +46,7 @@ Wait_for_internet	Wait_for_internet.c	/^void Wait_for_internet(void)$/;"	f
 bin_strip	makefile	/^bin_strip=arm-none-linux-gnueabi-strip$/;"	m
 check_Download_complete	Add_to_installation.c	/^int check_Download_complete(char *patch,int type)$/;"	f
 get_macid	Get_SerialID.c	/^int get_macid(char *macid)$/;"	f
+is_RHMS_multiple_run	is_RHMS_multiple_run.c	/^int is_RHMS_multiple_run()$/;"	f
 libs	makefile	/^libs=-L ..\/lib -lxml2 -lz$/;"	m
 main	main.c	/^int main()$/;"	f
 parseStory	firm_apps_response_parser.c	/^int parseStory (xmlDocPtr doc, xmlNodePtr cur,char *output_file)$/;"	f

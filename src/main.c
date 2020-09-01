@@ -41,7 +41,8 @@ int main()
 		fprintf(stderr,"SerialID Error, %s, Please Set Unique MachineId\n",SerialID);
 		return -1;
 	}
-
+	else 
+		fprintf(stdout,"Device SerialID : %s\n\n",SerialID);
 
 	Update_Configured_Server_Addr();
 
@@ -68,7 +69,6 @@ int main()
 			fprintf(stdout,"Please Do Register SerialID number in Suitable project, SerialID = %s\n", SerialID ); 
 			return ret;
 		}
-		
 		Download_Firmware_Updates();			
 
 		Download_Application_Updates();

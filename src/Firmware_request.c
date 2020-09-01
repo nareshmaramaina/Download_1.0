@@ -42,7 +42,7 @@ int Firmware_Request()
 	char *str=NULL;
 
 	memset(cmd,0,sizeof(cmd));
-	sprintf(cmd,"curl --cacert /vision/curl-ca-bundle.crt %s/api/FirmwareStatus?serialNo=%s 1> %s 2>%s",Server_Addr,SerialID,Firmware_response_file,Error_log_filename);
+	sprintf(cmd,"curl --cacert /vision/DeviceManagement/certs/curl-ca-bundle.crt %s/api/FirmwareStatus?serialNo=%s 1> %s 2>%s",Server_Addr,SerialID,Firmware_response_file,Error_log_filename);
 
 	system(cmd);
 
@@ -111,7 +111,7 @@ int Check_Address_Error_and_Update_Server_Addr_If_Error_Present()
 			break;
 		}
 
-		fprintf(stderr,"Curl Commad Error Log: %s\n",str);
+		fprintf(stderr,"curl request Error :  %s\n",str);
 	}
 	if ( strstr(str,"curl") != NULL )
 		fprintf(stderr,"curl related issue\n");

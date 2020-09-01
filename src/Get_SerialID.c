@@ -28,7 +28,7 @@ int Get_SerialID(char *SerialID)
 		strcpy(SerialID,macid);
 
 	}
-
+	
 	return 0;
 }
 
@@ -43,7 +43,7 @@ int Get_format_machineid(char *format_machineid)
 	FILE *fp=NULL;
 
 	char machineid[24]="";
- 	char Buffer[64]="";
+ 	char Buffer[24]="";
 
 
 	for ( i=0; i< 5;i++)
@@ -74,20 +74,18 @@ int Get_format_machineid(char *format_machineid)
 	fread(Buffer,sizeof(Buffer),1,fp);
 	fclose(fp);
 
-
 	remove("/tmp/.machineid");
 
-
-	strcpy(machineid,Buffer+10);
-	
-	if( machineid[strlen(machineid)-1] == '\n')
-		machineid[strlen(machineid)-1] = '\0';
-
-	if (  strlen(machineid) != 10 )
+	if( Buffer[strlen(Buffer)-1] == '\n')
+		Buffer[strlen(Buffer)-1] = '\0';
+	if (  strlen(Buffer+10) != 10 )
 	{
-		fprintf(stderr,"Error: machineid not 10 digits, %s\n",machineid);
+		fprintf(stderr,"Error: machineid  not 10 digits\n");
 		return -1;
 	}
+	
+	strcpy(machineid,Buffer+10);
+
 	if(machineid[0]=='1' && machineid[1]=='1')
 		sprintf(format_machineid,"1%s",machineid);
 

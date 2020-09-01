@@ -7,10 +7,11 @@ int Download_Application_Updates(void)
 {
 	int Total_Current_Server_Apps=0;
 	Total_Current_Server_Apps = Get_Total_Server_Apps();
-	fprintf(stdout,"Total_Current_Server_Apps = %d\n", Total_Current_Server_Apps);
+	fprintf(stdout,"\nApplications Request and Response, Total Applications count = %d\n",Total_Current_Server_Apps);
 	if( Total_Current_Server_Apps > 0 )
 		App_updates(Total_Current_Server_Apps);
-	else fprintf(stdout," No Server Apps Found, Apps request/response not happened    \n");	
+	else 
+		fprintf(stdout,"\nError: Application Request and Response not happened \n");	
 	return 0;
 }
 int Download_applications(int Update_count,struct RHMSApplication DownloadApplication[Update_count])
@@ -18,8 +19,8 @@ int Download_applications(int Update_count,struct RHMSApplication DownloadApplic
 	char FileName_with_path[320];
 	char path[310];
 	char cmd[320];
-	fprintf(stdout,"Applications Update count %d \n",Update_count);
 	int i,ret;
+	fprintf(stdout,"\nNeed to Download %d Applications \n",Update_count);
 	for(i=0;i<Update_count;i++)
 	{	
 		memset(path,0,sizeof(path));
@@ -166,13 +167,10 @@ int App_updates( int Total_Current_Server_Apps)
 			}
 		}
 
-		else fprintf(stdout," Line = %s",line);
-
-
 	}
 
 	Total_Server_Apps = i;
-	fprintf(stdout," Total_Server_Apps = %d\n", Total_Server_Apps);
+	//fprintf(stdout," Total_Server_Apps = %d\n", Total_Server_Apps);
 	free(line);
 	line=NULL;
 	fclose(fp);
@@ -201,7 +199,7 @@ int App_updates( int Total_Current_Server_Apps)
 
 				if( ServerApplication[i].Version > DeviceApplication.Version )
 				{
-					fprintf(stdout,"Update Found,ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f,DeviceApplicationVersion = %f\n",DeviceApplication.Type,DeviceApplication.Name,ServerApplication[i].Version , DeviceApplication.Version);
+					fprintf(stdout,"Update Found, ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f,DeviceApplicationVersion = %f\n",DeviceApplication.Type,DeviceApplication.Name,ServerApplication[i].Version , DeviceApplication.Version);
 
 					Update_flag=1;		
 				}
@@ -228,13 +226,13 @@ int App_updates( int Total_Current_Server_Apps)
 		{
 			if ( strlen(ServerApplication[i].URL) < 12 )
 			{
-				fprintf(stdout,"URL Not found, May be intial Update at server side / Not Correct,  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
+				fprintf(stdout,"		URL Not found, May be intial Update at server side / Not Correct,  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
 				continue;
 			}
 			if ( strlen(ServerApplication[i].Type) <= 0 || strlen(ServerApplication[i].Name) <= 0 || ServerApplication[i].Version <=0.0 )
 			{
 
-				fprintf(stdout,"Type/Name/Version Not Found, May be intial Update at server side / Not Correct  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
+				fprintf(stdout,"Error: Type/Name/Version Not Found, May be intial Update at server side / Not Correct  ApplicationType = %s, ApplicationName = %s ServerApplicationVersion = %f \n",ServerApplication[i].Type,ServerApplication[i].Name,ServerApplication[i].Version );
 				continue;
 			}
 			strcpy(DownloadApplication[Update_count].Type,ServerApplication[i].Type);

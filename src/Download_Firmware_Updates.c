@@ -8,9 +8,12 @@ int Download_Firmware_Updates(void)
 {
 	int Total_Current_Server_Firmwares=0;
 	Total_Current_Server_Firmwares = Get_Server_Firmwares_Count();
-	fprintf(stdout,"Total Current Firmware Server Firmwares = %d\n",Total_Current_Server_Firmwares);
+	fprintf(stdout,"\nFirmware Request and Response, Total Firmwares count = %d\n",Total_Current_Server_Firmwares);
 	if ( Total_Current_Server_Firmwares <= 0)
+	{
+		fprintf(stdout,"\nError: Firmware Request and Response not happened    \n");	
 		return -1;
+	}
 	else
 		return Firmware_updates(Total_Current_Server_Firmwares);	
 }
@@ -100,13 +103,10 @@ int Firmware_updates( int Total_Current_Server_Firmwares)
 			}
 		}
 
-		else fprintf(stdout," Line = %s \n",line);
-
-
 	}
 
 	Total_Server_Firmwares = i;
-	fprintf(stdout," Total_Server_Firmwares = %d\n", Total_Server_Firmwares);
+	//fprintf(stdout," Total_Server_Firmwares = %d\n", Total_Server_Firmwares);
 	if ( Total_Server_Firmwares == 0 )
 	{
 		fprintf(stdout,"Something Went Wrong with Firmware parse/request call , Empty Response came\n");
@@ -159,9 +159,6 @@ int Firmware_updates( int Total_Current_Server_Firmwares)
 			}
 
 
-			else fprintf(stdout,"Line = %s \n",line);
-
-
 		}
 		free(line);
 		line=NULL;
@@ -191,7 +188,7 @@ int Firmware_updates( int Total_Current_Server_Firmwares)
 			{
 				if ( strlen(ServerFirmware[i].URL) < 12 )
 				{
-					fprintf(stdout,"URL Not found / Not Correct,  FirmwareName = %s ServerFirmwareVersion = %f \n",ServerFirmwareName,ServerFirmware[i].Version );
+					fprintf(stdout,"\nURL Not found / Not Correct,  FirmwareName = %s ServerFirmwareVersion = %f \n",ServerFirmwareName,ServerFirmware[i].Version );
 					continue;
 				}
 				if ( strlen(ServerFirmwareName) <= 0 || ServerFirmware[i].Version <= 0.0 )
@@ -201,7 +198,7 @@ int Firmware_updates( int Total_Current_Server_Firmwares)
 				}
 				strcpy(DownloadFirmware[Update_count].URL,ServerFirmware[i].URL);
 				DownloadFirmware[Update_count].Version=ServerFirmware[i].Version;
-				fprintf(stdout,"Update Found,FirmwareName = %s ServerFirmwareVersion = %f,DeviceFirmwareVersion = %f\n",ServerFirmwareName,ServerFirmware[i].Version , DeviceFirmwareVersion);
+				fprintf(stdout,"\nUpdate Found,FirmwareName = %s ServerFirmwareVersion = %f,DeviceFirmwareVersion = %f\n",ServerFirmwareName,ServerFirmware[i].Version , DeviceFirmwareVersion);
 
 				Update_count++;
 			}
@@ -249,16 +246,17 @@ int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Upd
 	char cmd[320];
 	float Version=0.0;
 	int i,ret,start,end;
-	fprintf(stdout,"Firmware Update count %d \n",Update_count);
+	
+	fprintf(stdout,"\nNeed to Download %d Firmwares \n",Update_count);
+	
 	if ( Update_count == 1 )
 	{
-		fprintf(stdout,"Single Firmware Update Found \n");
 		start=0;
 		end=Update_count-1;
 	}
 	else if ( Update_count > 1 )
 	{
-		fprintf(stdout,"Multiple Firmware Updates Found \n");
+		fprintf(stdout,"Firmware Dependencies Found \n");
 		start=1;
 		end=Update_count;
 	}
