@@ -112,7 +112,7 @@ int check_Download_complete(char *patch,int type)
 	fp = fopen(filename,"r");
 	if ( fp == NULL )
 	{
-		fprintf(stdout," file not found %s\n",filename);
+//		fprintf(stdout," file not found %s\n",filename);
 		return -1;
 	}
 
