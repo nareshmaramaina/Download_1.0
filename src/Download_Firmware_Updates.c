@@ -11,7 +11,10 @@ int Download_Firmware_Updates(void)
 	fprintf(stdout,"\nFirmware Request and Response, Total Firmwares count = %d\n",Total_Current_Server_Firmwares);
 	if ( Total_Current_Server_Firmwares <= 0)
 	{
-		fprintf(stdout,"\nError: Firmware Request and Response not happened    \n");	
+		if ( Total_Current_Server_Firmwares == 0 )
+			fprintf(stdout,"\nNo intial Firmware Version in Server\n");
+		else
+			fprintf(stdout,"\nError: Firmware Request and Response not happened    \n");	
 		return -1;
 	}
 	else
@@ -46,11 +49,11 @@ int Firmware_updates( int Total_Current_Server_Firmwares)
 			if ( F_check == 0 )
 			{
 				sizeofBuffer = sizeof(ServerFirmwareName);
-                                if( strlen(str+13) > sizeofBuffer )
-                                {
-                                        fprintf(stderr,"Invalid: ServerFirmwareName Length More than %d bytes \n",sizeofBuffer);
-                                        continue;
-                                }
+				if( strlen(str+13) > sizeofBuffer )
+				{
+					fprintf(stderr,"Invalid: ServerFirmwareName Length More than %d bytes \n",sizeofBuffer);
+					continue;
+				}
 
 				strcpy(ServerFirmwareName,str+13);
 				if(ServerFirmwareName[strlen(ServerFirmwareName)-1] == '\n')
@@ -84,11 +87,11 @@ int Firmware_updates( int Total_Current_Server_Firmwares)
 			if( check == 1  )
 			{
 				sizeofBuffer = sizeof(ServerFirmware[i].URL);
-                                if( strlen(str+16) > sizeofBuffer )
-                                {
-                                        fprintf(stderr,"Invalid: ServerFirmware[%d].URL Length More than %d bytes \n",i,sizeofBuffer);
-                                        continue;
-                                }
+				if( strlen(str+16) > sizeofBuffer )
+				{
+					fprintf(stderr,"Invalid: ServerFirmware[%d].URL Length More than %d bytes \n",i,sizeofBuffer);
+					continue;
+				}
 
 				strcpy(ServerFirmware[i].URL,str+12);
 				if(ServerFirmware[i].URL[strlen(ServerFirmware[i].URL)-1] == '\n')
@@ -132,11 +135,11 @@ int Firmware_updates( int Total_Current_Server_Firmwares)
 			if((str = (char *)strstr(line,"FirmwareName:")) != NULL)
 			{
 				sizeofBuffer = sizeof(DeviceFirmwareName);
-                                if( strlen(str+13) > sizeofBuffer )
-                                {
-                                        fprintf(stderr,"Invalid: DeviceFirmwareName Length More than %d bytes \n",sizeofBuffer);
-                                        continue;
-                                }
+				if( strlen(str+13) > sizeofBuffer )
+				{
+					fprintf(stderr,"Invalid: DeviceFirmwareName Length More than %d bytes \n",sizeofBuffer);
+					continue;
+				}
 
 				memset(DeviceFirmwareName,0,sizeof(DeviceFirmwareName));
 				strcpy(DeviceFirmwareName,str+13);
@@ -246,9 +249,9 @@ int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Upd
 	char cmd[320];
 	float Version=0.0;
 	int i,ret,start,end;
-	
+
 	fprintf(stdout,"\nNeed to Download %d Firmwares \n",Update_count);
-	
+
 	if ( Update_count == 1 )
 	{
 		start=0;
