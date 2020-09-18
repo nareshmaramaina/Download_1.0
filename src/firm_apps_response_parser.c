@@ -37,6 +37,7 @@ int Parse_Firmware_response_xml(void)
 	xmlNodePtr cur;
 	xmlChar *key;
 	FILE *fp=NULL;
+	int flag =0;
 	
 	doc = xmlParseFile(Firmware_response_file);
 	if (doc == NULL ) 
@@ -67,7 +68,8 @@ int Parse_Firmware_response_xml(void)
 	{
 		if (!xmlStrcmp(cur->name, (const xmlChar *) "Dependencies"))
 		{
-			fclose(fp);
+			fclose(fp); // To write Previous Buffer into the Server_Firmware_release_file  
+			flag=1; 
 			for(cur = cur->xmlChildrenNode; cur != NULL; cur = cur->next)
 			{
 				if (!xmlStrcmp(cur->name, (const xmlChar *) "Dependency"))
@@ -80,7 +82,11 @@ int Parse_Firmware_response_xml(void)
 			fprintf(fp,"%s:%s\n", cur->name, key);
 
 	}
-	fclose(fp);
+	if ( flag == 1 )
+		fprintf(stdout," Dependencies Found in Server Response\n");
+	else 
+		fclose(fp);
+
 	fprintf(stdout,"Extracted Successfully in %s\n",Server_Firmware_release_file);
 
 	xmlFreeDoc(doc);
