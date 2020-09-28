@@ -24,9 +24,9 @@ int Firm_Apps_Download_lock()
 int main()
 {
 	short int ret;
+	int Downloader_Current_Version=2;
 	int Apps_Downloads=0,Firmware_Downloads =0,run_time=0;
-
-	fprintf(stdout,"\n*****************\nApp	: Downloader_FirmwareAndApps\nVersion	: 1.0\n*****************\n");
+	fprintf(stdout,"\n*****************\nApp	: Downloader_FirmwareAndApps\nVersion	: %d\n*****************\n",Downloader_Current_Version);
 
 	ret = Firm_Apps_Download_lock();
 
@@ -35,6 +35,8 @@ int main()
 		fprintf(stderr,"Download Application is already Running\n");
 		return -1;
 	}
+	sleep(1); // For RHMS Package Version Purpose 
+	Write_Current_Version(Downloader_Current_Version);
 	ret = Get_SerialID(SerialID);
 	if ( ret != 0)
 	{

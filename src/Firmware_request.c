@@ -40,13 +40,32 @@ int Firmware_Request()
 	char    cmd[1024];
 	size_t len=0;
 	char *str=NULL;
+	short int Env_flag=0;
+	char curl_name[64]="/vision/DeviceManagement/system/usr/bin/DM_curl";
+	if ( access(curl_name,F_OK) != 0 )
+	{
+		fprintf(stdout,"%s not found \n",curl_name);
+		memset(curl_name,0,sizeof(curl_name));
+		strcpy(curl_name,"curl");
+	}
+	else
+	{
+		setenv("LD_LIBRARY_PATH","/vision/DeviceManagement/system/usr/lib/",1);
+		Env_flag=1;
+
+	}
 
 	memset(cmd,0,sizeof(cmd));
-	sprintf(cmd,"curl --cacert /vision/DeviceManagement/certs/curl-ca-bundle.crt %s/api/FirmwareStatus?serialNo=%s 1> %s 2>%s",Server_Addr,SerialID,Firmware_response_file,Error_log_filename);
+	sprintf(cmd,"%s --cacert  /vision/DeviceManagement/certs/curl-ca-bundle.crt %s/api/FirmwareStatus?serialNo=%s 1> %s 2>%s",curl_name,Server_Addr,SerialID,Firmware_response_file,Error_log_filename);
+
+
+	puts(cmd);
 
 	system(cmd);
 
-	puts(cmd);
+	if ( Env_flag == 1 )
+		unsetenv("LD_LIBRARY_PATH");
+
 	memset(cmd,0,sizeof(cmd));
 
 	sprintf(cmd,"dos2unix %s",Firmware_response_file);

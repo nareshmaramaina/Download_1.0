@@ -95,3 +95,5 @@ int Check_Address_Error_and_Update_Server_Addr_If_Error_Present();
 int Firmware_Request();
 int Applications_Request();
 int is_RHMS_multiple_run();
+void Write_Current_Version(int Version);
+

@@ -92,7 +92,7 @@ int Get_format_machineid(char *format_machineid)
 	else if (machineid[0]=='1' && machineid[1]>'4')
 		sprintf(format_machineid,"11%s",machineid);
 
-	else if(machineid[1] == '0')
+	else if(machineid[1] == '0' || machineid[0]=='2' )
 		sprintf(format_machineid,"111%s",machineid);
 	else 
 	{
