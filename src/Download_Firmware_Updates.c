@@ -1,6 +1,6 @@
 #include<header.h>
+char ServerProjectName[128];
 extern char *Server_Firmware_release_file;
-char *Device_Firmware_release_file="/etc/vision/RHMS/Firmware/FirmwareUpdated.info";
 int Firmware_updates( int Total_Current_Server_Firmwares);
 int Get_Server_Firmwares_Count();
 int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Update_count],char *);
@@ -23,6 +23,7 @@ int Download_Firmware_Updates(void)
 
 int Firmware_updates( int Total_Current_Server_Firmwares)
 {
+	char Device_Firmware_release_file[320];
 	float DeviceFirmwareVersion=0.0;
 	char ServerFirmwareName[128]="";
 	char DeviceFirmwareName[128]="";
@@ -44,7 +45,22 @@ int Firmware_updates( int Total_Current_Server_Firmwares)
 
 	for(i=0,F_check=0,check=0;getline(&line, &len, fp) > 0;)
 	{
-		if((str = (char *)strstr(line,"FirmwareName:")) != NULL)
+
+		if((str = (char *)strstr(line,"ProjectName:")) != NULL)
+		{
+			memset(ServerProjectName,0,sizeof(ServerProjectName));
+			sizeofBuffer = sizeof(ServerProjectName);
+			if( strlen(str+12) > sizeofBuffer )
+			{
+				fprintf(stderr,"Invalid: ServerProjectName Length More than %d bytes \n",sizeofBuffer);
+				continue;
+			}
+			strcpy(ServerProjectName,str+12);
+			if(ServerProjectName[strlen(ServerProjectName)-1] == '\n')
+				ServerProjectName[strlen(ServerProjectName)-1]='\0';
+
+		}
+		else if((str = (char *)strstr(line,"FirmwareName:")) != NULL)
 		{
 			if ( F_check == 0 )
 			{
@@ -107,6 +123,9 @@ int Firmware_updates( int Total_Current_Server_Firmwares)
 		}
 
 	}
+	free(line);
+	line=NULL;
+	fclose(fp);
 
 	Total_Server_Firmwares = i;
 	//fprintf(stdout," Total_Server_Firmwares = %d\n", Total_Server_Firmwares);
@@ -115,14 +134,12 @@ int Firmware_updates( int Total_Current_Server_Firmwares)
 		fprintf(stdout,"Something Went Wrong with Firmware parse/request call , Empty Response came\n");
 		return -1;
 	}
-	free(line);
-	line=NULL;
-	fclose(fp);
 
 	//	for(i=0;i<Total_Server_Firmwares;i++)
 	//		fprintf(stdout,"FirmwareName=%s,FirmwareVersion= %.1f FirmwareURL = %s\n",ServerFirmwareName,ServerFirmware[i].Version,ServerFirmware[i].URL);
 
-
+	memset( Device_Firmware_release_file,0,sizeof(Device_Firmware_release_file) );
+	sprintf(Device_Firmware_release_file,"/etc/vision/RHMS/Firmware/%s/%s/FirmwareUpdated.info",ServerProjectName,ServerFirmwareName);
 	fp = fopen(Device_Firmware_release_file,"r");
 	if(fp == NULL)
 	{
@@ -168,17 +185,14 @@ int Firmware_updates( int Total_Current_Server_Firmwares)
 		fclose(fp);
 	}
 	ret = strcmp(ServerFirmwareName,DeviceFirmwareName);
-	if ( ret != 0) 
+	if ( ret != 0 )
 	{
 		if ( strlen(DeviceFirmwareName) == 0 )
 			fprintf(stdout,"Intial Firmware patch\n");
 		else
-		{
-			fprintf(stdout,"Firmware Name Newly Added or Got Changed by server\n");
-			fprintf(stdout,"Removing previous release\n");
-		}
+			fprintf(stdout,"Firmware Name/Project Name  Newly Added or Got Changed by server\n");
+
 		DeviceFirmwareVersion=0.0;
-		remove(Device_Firmware_release_file);
 	}
 
 	if( ServerFirmware[0].Version > DeviceFirmwareVersion )
@@ -244,9 +258,9 @@ int Get_Server_Firmwares_Count()
 }
 int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Update_count],char *FirmwareName)
 {
-	char FileName_with_path[320];
-	char path[310];
-	char cmd[320];
+	char FileName_with_path[420];
+	char path[410];
+	char cmd[430];
 	float Version=0.0;
 	int i,ret,start,end;
 
@@ -271,7 +285,7 @@ int Download_firmwares(int Update_count,struct RHMSFirmware DownloadFirmware[Upd
 	//	for(i=Update_count-1;i>=0;i--)
 	memset(path,0,sizeof(path));
 	memset(cmd,0,sizeof(cmd));
-	sprintf(path,"/mnt/sysuser/Software-Upgrade/Firmware_Downloads/%s",FirmwareName);
+	sprintf(path,"/mnt/sysuser/Software-Upgrade/Firmware_Downloads/%s/%s",ServerProjectName,FirmwareName);
 	sprintf(cmd,"mkdir -p %s",path);
 	system(cmd);
 	for(i=start;i<=end;i++)  // 2 

@@ -1,4 +1,5 @@
 #include<header.h>
+extern char ServerProjectName[128];
 extern char *Server_Application_release_file;
 int App_updates( int Total_Current_Server_Apps);
 int Get_Total_Server_Apps();
@@ -16,9 +17,9 @@ int Download_Application_Updates(void)
 }
 int Download_applications(int Update_count,struct RHMSApplication DownloadApplication[Update_count])
 {
-	char FileName_with_path[320];
-	char path[310];
-	char cmd[320];
+	char FileName_with_path[450];
+	char path[440];
+	char cmd[460];
 	int i,ret;
 	fprintf(stdout,"\nNeed to Download %d Applications \n",Update_count);
 	for(i=0;i<Update_count;i++)
@@ -26,7 +27,7 @@ int Download_applications(int Update_count,struct RHMSApplication DownloadApplic
 		memset(path,0,sizeof(path));
 		memset(cmd,0,sizeof(cmd));
 		memset(FileName_with_path,0,sizeof(FileName_with_path));
-		sprintf(path,"/mnt/sysuser/Software-Upgrade/Applications_Downloads/%s/%s",DownloadApplication[i].Type,DownloadApplication[i].Name);
+		sprintf(path,"/mnt/sysuser/Software-Upgrade/Applications_Downloads/%s/%s/%s",ServerProjectName,DownloadApplication[i].Type,DownloadApplication[i].Name);
 		sprintf(cmd,"mkdir -p %s",path);
 
 		system(cmd);
@@ -60,7 +61,7 @@ int Download_applications(int Update_count,struct RHMSApplication DownloadApplic
 
 int App_updates( int Total_Current_Server_Apps)
 {
-	char Device_Application_release_file[300];
+	char Device_Application_release_file[428];
 	struct RHMSApplication ServerApplication[Total_Current_Server_Apps];
 	struct RHMSApplication DownloadApplication[Total_Current_Server_Apps];
 	struct POSApplication DeviceApplication;
@@ -80,16 +81,33 @@ int App_updates( int Total_Current_Server_Apps)
 
 	for(i=0,j=0,check=0;getline(&line, &len, fp) > 0;)
 	{
-		if((str = (char *)strstr(line,"ApplicationType:")) != NULL)
+		if((str = (char *)strstr(line,"ProjectName:")) != NULL)
+		{
+			if ( strlen(ServerProjectName) == 0 )
+			{
+				memset(ServerProjectName,0,sizeof(ServerProjectName));
+				sizeofBuffer = sizeof(ServerProjectName);
+				if( strlen(str+12) > sizeofBuffer )
+				{
+					fprintf(stderr,"Invalid: ServerProjectName Length More than %d bytes \n",sizeofBuffer);
+					continue;
+				}
+				strcpy(ServerProjectName,str+12);
+				if(ServerProjectName[strlen(ServerProjectName)-1] == '\n')
+					ServerProjectName[strlen(ServerProjectName)-1]='\0';
+			}
+
+		}
+		else if((str = (char *)strstr(line,"ApplicationType:")) != NULL)
 		{
 			if( check == 0 || check == 2 || check == 4 )
 			{
 				sizeofBuffer = sizeof(ServerApplication[i].Type);
-                                if( strlen(str+16) > sizeofBuffer )
-                                {
-                                        fprintf(stderr,"Invalid: ServerApplication[%d].Type Length More than %d bytes \n",i,sizeofBuffer);
-                                        continue;
-                                }
+				if( strlen(str+16) > sizeofBuffer )
+				{
+					fprintf(stderr,"Invalid: ServerApplication[%d].Type Length More than %d bytes \n",i,sizeofBuffer);
+					continue;
+				}
 
 
 				strcpy(ServerApplication[i].Type,str+16);
@@ -109,11 +127,11 @@ int App_updates( int Total_Current_Server_Apps)
 			if ( check == 1 )
 			{
 				sizeofBuffer = sizeof(ServerApplication[j].Name);
-                                if( strlen(str+16) > sizeofBuffer )
-                                {
-                                        fprintf(stderr,"Invalid: ServerApplication[%d].Name Length More than %d bytes \n",j,sizeofBuffer);
-                                        continue;
-                                }
+				if( strlen(str+16) > sizeofBuffer )
+				{
+					fprintf(stderr,"Invalid: ServerApplication[%d].Name Length More than %d bytes \n",j,sizeofBuffer);
+					continue;
+				}
 
 				strcpy(ServerApplication[j].Name,str+16);
 				if(ServerApplication[j].Name[strlen(ServerApplication[j].Name)-1] == '\n')
@@ -148,11 +166,11 @@ int App_updates( int Total_Current_Server_Apps)
 			if( check == 3  && i == j )
 			{
 				sizeofBuffer = sizeof(ServerApplication[j-1].URL);
-                                if( strlen(str+15) > sizeofBuffer )
-                                {
-                                        fprintf(stderr,"Invalid: ServerApplication[%d].URL Length More than %d bytes \n",j-1,sizeofBuffer);
-                                        continue;
-                                }
+				if( strlen(str+15) > sizeofBuffer )
+				{
+					fprintf(stderr,"Invalid: ServerApplication[%d].URL Length More than %d bytes \n",j-1,sizeofBuffer);
+					continue;
+				}
 
 				strcpy(ServerApplication[j-1].URL,str+15);
 				if(ServerApplication[j-1].URL[strlen(ServerApplication[j-1].URL)-1] == '\n')
@@ -163,6 +181,9 @@ int App_updates( int Total_Current_Server_Apps)
 			{
 				fprintf(stdout," %d  %d \n", i,j);
 				fprintf(stdout,"ApplicationURL Error: Wrong Application Response in %s\n",Server_Application_release_file);
+				free(line);
+				line=NULL;
+				fclose(fp);
 				return 0;
 			}
 		}
@@ -187,7 +208,7 @@ int App_updates( int Total_Current_Server_Apps)
 	for(i=0,Update_count=0;i<Total_Server_Apps;i++)
 	{
 		memset(Device_Application_release_file,0,sizeof(Device_Application_release_file));
-		sprintf(Device_Application_release_file,"/etc/vision/RHMS/Apps/%s/%s/AppUpdated.info",ServerApplication[i].Type,ServerApplication[i].Name);
+		sprintf(Device_Application_release_file,"/etc/vision/RHMS/Apps/%s/%s/%s/AppUpdated.info",ServerProjectName,ServerApplication[i].Type,ServerApplication[i].Name);
 		Device_App_Wrong=0;
 		ret = access(Device_Application_release_file,F_OK);
 		if ( ret == 0 )

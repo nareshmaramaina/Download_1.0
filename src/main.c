@@ -24,7 +24,7 @@ int Firm_Apps_Download_lock()
 int main()
 {
 	short int ret;
-	int Downloader_Current_Version=2;
+	int Downloader_Current_Version=3;
 	int Apps_Downloads=0,Firmware_Downloads =0,run_time=0;
 	fprintf(stdout,"\n*****************\nApp	: Downloader_FirmwareAndApps\nVersion	: %d\n*****************\n",Downloader_Current_Version);
 
