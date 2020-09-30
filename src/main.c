@@ -35,7 +35,8 @@ int main()
 		fprintf(stderr,"Download Application is already Running\n");
 		return -1;
 	}
-	sleep(1); // For RHMS Package Version Purpose 
+	fprintf(stdout,"Downloader: Sleep 8 secs\n");
+	sleep(8); // For Startx Purpose 
 	Write_Current_Version(Downloader_Current_Version);
 	ret = Get_SerialID(SerialID);
 	if ( ret != 0)
