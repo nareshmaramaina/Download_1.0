@@ -24,7 +24,7 @@ int Firm_Apps_Download_lock()
 int main()
 {
 	short int ret;
-	int Downloader_Current_Version=3;
+	int Downloader_Current_Version=4;
 	int Apps_Downloads=0,Firmware_Downloads =0,run_time=0;
 	fprintf(stdout,"\n*****************\nApp	: Downloader_FirmwareAndApps\nVersion	: %d\n*****************\n",Downloader_Current_Version);
 
@@ -35,9 +35,10 @@ int main()
 		fprintf(stderr,"Download Application is already Running\n");
 		return -1;
 	}
-	fprintf(stdout,"Downloader: Sleep 8 secs\n");
-	sleep(8); // For Startx Purpose 
+	sleep(1);
 	Write_Current_Version(Downloader_Current_Version);
+	fprintf(stdout,"Downloader: Sleep 6 secs\n");
+	sleep(6); // For Startx Purpose 
 	ret = Get_SerialID(SerialID);
 	if ( ret != 0)
 	{
@@ -87,7 +88,7 @@ int main()
 			fprintf(stdout,"Downloader: sleep for 1 hr\n");
 			sleep(3600);
 		}
-		fprintf(stdout,"Searching For New Apps/Firmware Download Updates\n");
+		fprintf(stdout,"Looping For New Apps/Firmware Download Updates\n");
 	}
 
 	return 0;

@@ -48,36 +48,38 @@ int Get_format_machineid(char *format_machineid)
 
 	for ( i=0; i< 5;i++)
 	{
-		ret = system("fw_printenv  machineid  > /tmp/.machineid");
+		ret = system("fw_printenv  machineid  > /tmp/.DownloaderMachineid");
 
 		if ( ret == 0)
 			break;
 
 		sleep(1);
 	}
-	if ( ret != 0 )
-	{
-		fprintf(stderr,"Machine ID not Found \n");
-		return ret;
-	}
 
-
-	fp = fopen("/tmp/.machineid", "r");
+	fp = fopen("/tmp/.DownloaderMachineid", "r");
 
 	if(fp ==NULL)
 	{
 
-		fprintf(stderr,"LIB#Unable To Open The /tmp/.machineid\n");
+		fprintf(stderr,"/tmp/.DownloaderMachineid file not found\n");
 		return -1;
 
 	}
 	fread(Buffer,sizeof(Buffer),1,fp);
 	fclose(fp);
 
-	remove("/tmp/.machineid");
+	remove("/tmp/.DownloaderMachineid");
+
+	if (strlen(Buffer) == 0 )
+        {
+                fprintf(stderr,"Machine ID not Found\nString length of machineid is 0\n");
+                return -1;
+        }
+
 
 	if( Buffer[strlen(Buffer)-1] == '\n')
 		Buffer[strlen(Buffer)-1] = '\0';
+	
 	if (  strlen(Buffer+10) != 10 )
 	{
 		fprintf(stderr,"Error: machineid  not 10 digits\n");

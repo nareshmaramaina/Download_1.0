@@ -1,5 +1,5 @@
 #include <header.h>
-char *Default_RHMS_Server_Address="https://rhms2.callippus.co.uk";
+char *Default_RHMS_Server_Address="https://rhms2.visiontek.co.in";
 char Server_Addr[512];
 int  Update_Configured_Server_Addr()
 {
