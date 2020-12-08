@@ -34,6 +34,8 @@ int Download_Update(char *URL, char *Filename_with_Download_Location)
 	{
 		Wait_for_internet(); //Block until internet 
 
+		Check_date_set_if_wrong(0);
+
 		ret = system(Download_cmd);
 
 		if (ret == 0)

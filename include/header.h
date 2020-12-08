@@ -97,3 +97,4 @@ int Applications_Request();
 int is_RHMS_multiple_run();
 void Write_Current_Version(int Version);
 
+int Check_date_set_if_wrong();

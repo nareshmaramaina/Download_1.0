@@ -60,6 +60,9 @@ int Applications_Request()
 	sprintf(cmd,"%s --cacert  /vision/DeviceManagement/certs/curl-ca-bundle.crt %s/api/ApplicationStatus?serialNo=%s 1> %s 2>%s",curl_name,Server_Addr,SerialID,Application_response_file,Error_log_filename);
 
 	puts(cmd);
+	
+	Check_date_set_if_wrong(0);
+	
 	system(cmd);
 
 

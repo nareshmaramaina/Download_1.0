@@ -61,6 +61,8 @@ int Firmware_Request()
 
 	puts(cmd);
 
+	Check_date_set_if_wrong(0);
+
 	system(cmd);
 
 	if ( Env_flag == 1 )
@@ -130,6 +132,12 @@ int Check_Address_Error_and_Update_Server_Addr_If_Error_Present()
 			break;
 		}
 
+		if ( strstr(str,"expired") != NULL )
+		{
+			fprintf(stderr,"curl request Error :  %s\nMay be device has wrong date and time, Updating date and time..\n",str);
+			Check_date_set_if_wrong(1);
+			break;
+		}
 		fprintf(stderr,"curl request Error :  %s\n",str);
 	}
 	if ( strstr(str,"curl") != NULL )
