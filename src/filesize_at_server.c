@@ -15,7 +15,6 @@ int filesize_at_server(char *URL,int Env_flag)
 	if ( fp != NULL )
 	{
 		fscanf(fp,"%d",&size);
-		fprintf(stdout,"HEAD Size of URL file = %d\n",size);
 		pclose(fp);
 		return size;
 	}

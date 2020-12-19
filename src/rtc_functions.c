@@ -85,7 +85,7 @@ int Check_7days_Validity(char *filename)
 
 	memset(Download_Started_Day_filename,0,sizeof(Download_Started_Day_filename));
 
-	sprintf("%s.Download_Started_Day",filename);
+	sprintf(Download_Started_Day_filename,"%s.Download_Started_Day",filename);
 
 
 
