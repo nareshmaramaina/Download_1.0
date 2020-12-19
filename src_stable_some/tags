@@ -11,17 +11,11 @@ Applications_Request	Application_request.c	/^int Applications_Request()$/;"	f
 Applications_Request_and_Response	Application_request.c	/^int Applications_Request_and_Response()$/;"	f
 CC	makefile	/^CC= arm-none-linux-gnueabi-gcc -Wall $/;"	m
 CFLAGS	makefile	/^CFLAGS=-Wall  -I ..\/include$/;"	m
-Check_7days_Validity	rtc_functions.c	/^int Check_7days_Validity(char *filename)$/;"	f
 Check_Address_Error_and_Update_Server_Addr_If_Error_Present	Firmware_request.c	/^int Check_Address_Error_and_Update_Server_Addr_If_Error_Present()$/;"	f
-Check_date_set_if_wrong	Check_date_set_if_wrong.c	/^int Check_date_set_if_wrong(int Set_direct)$/;"	f
 Check_internet_by_hostname	Wait_for_internet.c	/^int Check_internet_by_hostname(char *host)$/;"	f
-Check_md5sum_Application_patch	Check_md5sum_of_Patch.c	/^int Check_md5sum_Application_patch(char *ApplicationPatchFile)$/;"	f
-Check_md5sum_Application_patch	Install_Application_patch.c	/^int Check_md5sum_Application_patch(char *ApplicationPatchFile)$/;"	f
-Check_md5sum_Firmware_patch	Check_md5sum_of_Patch.c	/^int Check_md5sum_Firmware_patch(char *FirmwarePatchFile)$/;"	f
-Check_md5sum_Firmware_patch	Install_Firmware_patch.c	/^int Check_md5sum_Firmware_patch(char *FirmwarePatchFile)$/;"	f
-Check_md5sum_of_Patch	Check_md5sum_of_Patch.c	/^int Check_md5sum_of_Patch(char *PatchFile )$/;"	f
-Default_RHMS_Server_Address	Update_Configured_Server_Addr.c	/^char *Default_RHMS_Server_Address="https:\/\/rhms2.visiontek.co.in";$/;"	v
+Default_RHMS_Server_Address	Update_Configured_Server_Addr.c	/^char *Default_RHMS_Server_Address="https:\/\/rhms2.callippus.co.uk";$/;"	v
 Device_App_info_Details	Device_App_info_Details.c	/^int Device_App_info_Details(char *Device_Application_release_file,char *DeviceApplicationType,char *DeviceApplicationName,float *DeviceApplicationVersion )$/;"	f
+Device_Firmware_release_file	Download_Firmware_Updates.c	/^char *Device_Firmware_release_file="\/etc\/vision\/RHMS\/Firmware\/FirmwareUpdated.info";$/;"	v
 Download_Application_Updates	Download_Application_Updates.c	/^int Download_Application_Updates(void)$/;"	f
 Download_Firmware_Updates	Download_Firmware_Updates.c	/^int Download_Firmware_Updates(void)$/;"	f
 Download_Update	Download_Update.c	/^int Download_Update(char *URL, char *Filename_with_Download_Location)$/;"	f
@@ -33,12 +27,8 @@ Firmware_Request	Firmware_request.c	/^int Firmware_Request() $/;"	f
 Firmware_Request_and_Response	Firmware_request.c	/^int Firmware_Request_and_Response()$/;"	f
 Firmware_response_file	Firmware_request.c	/^char *Firmware_response_file="\/opt\/Firmware_response.xml";$/;"	v
 Firmware_updates	Download_Firmware_Updates.c	/^int Firmware_updates( int Total_Current_Server_Firmwares)$/;"	f
-Get_Current_Date	rtc_functions.c	/^void Get_Current_Date(char *Date)$/;"	f
-Get_Difference_Days_of_Today_with_Last_updated_day	rtc_functions.c	/^int Get_Difference_Days_of_Today_with_Last_updated_day (char *filename,int my_date,int my_month,int my_year)$/;"	f
 Get_SerialID	Get_SerialID.c	/^int Get_SerialID(char *SerialID)$/;"	f
 Get_Server_Firmwares_Count	Download_Firmware_Updates.c	/^int Get_Server_Firmwares_Count()$/;"	f
-Get_Tokens_of_ApplicationPatchfile	Get_Tokens_of_Patchfile.c	/^int Get_Tokens_of_ApplicationPatchfile(char *file,char *ApplicationType,char *ApplicationName,float *Version,char *ProjectName)$/;"	f
-Get_Tokens_of_FirmwarePatchfile	Get_Tokens_of_Patchfile.c	/^int Get_Tokens_of_FirmwarePatchfile(char *file,char *FirmwareName,float *Version,char *ProjectName)$/;"	f
 Get_Total_Downloaded_Updates	Get_Total_Downloaded_Updates.c	/^int Get_Total_Downloaded_Updates(int type)$/;"	f
 Get_Total_Server_Apps	Download_Application_Updates.c	/^int Get_Total_Server_Apps()$/;"	f
 Get_format_machineid	Get_SerialID.c	/^int Get_format_machineid(char *format_machineid)$/;"	f
@@ -47,33 +37,17 @@ Install_Firmwares_file	Add_to_installation.c	/^char *Install_Firmwares_file="\/m
 Parse_Application_response_xml	firm_apps_response_parser.c	/^int Parse_Application_response_xml(void)$/;"	f
 Parse_Firmware_response_xml	firm_apps_response_parser.c	/^int Parse_Firmware_response_xml(void)$/;"	f
 SerialID	Get_SerialID.c	/^char SerialID[24];$/;"	v
-ServerProjectName	Download_Firmware_Updates.c	/^char ServerProjectName[128];$/;"	v
 Server_Addr	Update_Configured_Server_Addr.c	/^char Server_Addr[512];$/;"	v
 Server_Application_release_file	firm_apps_response_parser.c	/^char *Server_Application_release_file="\/etc\/vision\/RHMS\/Apps\/ServerApplicationsRelease.info";$/;"	v
 Server_Firmware_release_file	firm_apps_response_parser.c	/^char *Server_Firmware_release_file="\/etc\/vision\/RHMS\/Firmware\/ServerFirmwareRelease.info";$/;"	v
-Standard_Apps_path	Get_Total_Downloaded_Updates.c	/^char *Standard_Apps_path="\/mnt\/sysuser\/Software-Upgrade\/Applications_Downloads\/";$/;"	v
-Standard_Firmwares_path	Get_Total_Downloaded_Updates.c	/^char *Standard_Firmwares_path="\/mnt\/sysuser\/Software-Upgrade\/Firmware_Downloads\/";$/;"	v
 Update_Configured_Server_Addr	Update_Configured_Server_Addr.c	/^int  Update_Configured_Server_Addr()$/;"	f
 Update_Current_Date_with_Time	Add_to_installation.c	/^void Update_Current_Date_with_Time(char *Date_time)$/;"	f
 Wait_for_internet	Wait_for_internet.c	/^void Wait_for_internet(void)$/;"	f
-Write_Current_Version	Write_Current_Version.c	/^void Write_Current_Version(int Version)$/;"	f
 bin_strip	makefile	/^bin_strip=arm-none-linux-gnueabi-strip$/;"	m
 check_Download_complete	Add_to_installation.c	/^int check_Download_complete(char *patch,int type)$/;"	f
-curl_date	Check_date_set_if_wrong.c	/^int  curl_date()$/;"	f
-date	Check_date_set_if_wrong.c	/^	int date;$/;"	m	struct:net_time	file:
-diff_bw_two_dates	rtc_functions.c	/^static int diff_bw_two_dates(int firstDate, int firstMonth, int firstYear, int secondDate, int secondMonth, int secondYear)$/;"	f	file:
-filesize_at_server	filesize_at_server.c	/^int filesize_at_server(char *URL,int Env_flag)$/;"	f
 get_macid	Get_SerialID.c	/^int get_macid(char *macid)$/;"	f
-get_month	Check_date_set_if_wrong.c	/^int get_month(char *month)$/;"	f
 is_RHMS_multiple_run	is_RHMS_multiple_run.c	/^int is_RHMS_multiple_run()$/;"	f
 libs	makefile	/^libs=-L ..\/lib -lxml2 -lz$/;"	m
 main	main.c	/^int main()$/;"	f
-month	Check_date_set_if_wrong.c	/^	char month[10];$/;"	m	struct:net_time	file:
-net_time	Check_date_set_if_wrong.c	/^struct net_time$/;"	s	file:
-net_time_t	Check_date_set_if_wrong.c	/^}net_time_t;$/;"	v	typeref:struct:net_time
 parseStory	firm_apps_response_parser.c	/^int parseStory (xmlDocPtr doc, xmlNodePtr cur,char *output_file)$/;"	f
 retrieve_nw_details	Wait_for_internet.c	/^static int retrieve_nw_details(void)$/;"	f	file:
-size_of_file	filesize_at_server.c	/^int size_of_file(char *file)$/;"	f
-time	Check_date_set_if_wrong.c	/^	char time[50];$/;"	m	struct:net_time	file:
-year	Check_date_set_if_wrong.c	/^	int year;$/;"	m	struct:net_time	file:
-zone	Check_date_set_if_wrong.c	/^	char zone[10];$/;"	m	struct:net_time	file:

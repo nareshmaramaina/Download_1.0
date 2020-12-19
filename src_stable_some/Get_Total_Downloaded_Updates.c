@@ -1,14 +1,14 @@
 #include<header.h>
 extern char *Install_Applications_file;
 extern char *Install_Firmwares_file;
-char *Standard_Apps_path="/mnt/sysuser/Software-Upgrade/Applications_Downloads/";
-char *Standard_Firmwares_path="/mnt/sysuser/Software-Upgrade/Firmware_Downloads/";
 int Get_Total_Downloaded_Updates(int type)
 {
 	FILE *fp=NULL;
 	char filename[128];
 	char *line=NULL;
 	char path[128];
+	char *Standard_Apps_path="/mnt/sysuser/Software-Upgrade/Applications_Downloads/";
+	char *Standard_Firmwares_path="/mnt/sysuser/Software-Upgrade/Firmware_Downloads/";
 	size_t len=0;
 	int Updates=0;
 	memset(filename,0,sizeof(memset));

@@ -96,5 +96,11 @@ int Firmware_Request();
 int Applications_Request();
 int is_RHMS_multiple_run();
 void Write_Current_Version(int Version);
-
+int Get_Tokens_of_FirmwarePatchfile(char *file,char *FirmwareName,float *Version,char *ProjectName);
 int Check_date_set_if_wrong();
+
+int Get_Tokens_of_ApplicationPatchfile(char *file,char *ApplicationType,char *ApplicationName,float *Version,char *ProjectName);
+int Check_7days_Validity(char *filename);
+int filesize_at_server(char *URL,int Env_flag);
+int size_of_file(char *file);
+int Check_md5sum_of_Patch(char *PatchFile );
