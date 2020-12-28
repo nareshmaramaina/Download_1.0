@@ -104,8 +104,11 @@ int Check_7days_Validity(char *filename)
 		}
 		no_days =	Get_Difference_Days_of_Today_with_Last_updated_day (Download_Started_Day_filename,CurrentDay, CurrentMonth, CurrentYear);
 		if(no_days >= 7)
+		{
+			remove(filename);
+			remove(Download_Started_Day_filename);
 			return 0;
-
+		}
 		else if (no_days == 0)
 			return -1;
 

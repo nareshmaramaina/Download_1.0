@@ -87,8 +87,7 @@ int Download_Update(char *URL, char *Filename_with_Download_Location)
 
 			if ( i > 10  && Check_7days_Validity(Filename_with_Download_Location) == 0 )
 			{
-				fprintf(stdout,"Deleting %s partial downloaded Patch File,  Due to 7days retrys completed\n", Filename_with_Download_Location);	
-				remove(Filename_with_Download_Location);
+				fprintf(stdout,"Deleted %s partial downloaded Patch File,  Due to 7days retrys completed, retrying Download ..\n", Filename_with_Download_Location);	
 			}			
 			if ( ServerFileSize > 0 &&  DownloadedFileSize > ServerFileSize )
 			{	
